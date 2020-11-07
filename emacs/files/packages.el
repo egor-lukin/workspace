@@ -68,3 +68,7 @@
 (package! company-tabnine)
 (package! graphviz-dot-mode)
 (package! org-journal)
+(package! org-roam-server)
+(package! kubernetes-evil)
+(package! org-roam :pin "0d235686f4b2cef9b6cded861edabf747e1d64e2")
+(package! nov)
