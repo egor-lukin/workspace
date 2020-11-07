@@ -16,3 +16,4 @@
     - { src: '{{ playbook_dir }}/configs/files/i3', dest: '~/.config/i3/config' }
     - { src: '{{ playbook_dir }}/configs/files/polybar', dest: '~/.config/polybar/config' }
     - { src: '{{ playbook_dir }}/configs/files/launch.sh', dest: '~/.config/polybar/launch.sh' }
+    - { src: '{{ playbook_dir }}/configs/files/offlineimap', dest: '~/.offlineimaprc' }
