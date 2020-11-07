@@ -26,5 +26,5 @@
     - { src: '{{ playbook_dir }}/emacs/files/packages.el', dest: '~/.doom.d/packages.el' }
 
 - name: Refresh doom
-  shell: |
-    ~/.emacs.d/bin/doom refresh
+ refresh shell: |
+    ~/.emacs.d/bin/doom sync
