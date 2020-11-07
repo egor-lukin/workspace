@@ -88,10 +88,4 @@ export VISUAL="vim"
 export PATH=$HOME/bin:$PATH
 export PATH="/home/azx/Projects:${PATH}"
 
-# The next line updates PATH for Yandex Cloud CLI.
-if [ -f '/home/azx/yandex-cloud/path.bash.inc' ]; then source '/home/azx/yandex-cloud/path.bash.inc'; fi
-
-# The next line enables shell command completion for yc.
-if [ -f '/home/azx/yandex-cloud/completion.bash.inc' ]; then source '/home/azx/yandex-cloud/completion.bash.inc'; fi
-
-
+# source <(kubectl completion bash)
