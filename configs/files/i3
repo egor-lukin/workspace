@@ -182,6 +182,11 @@ bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+#interactive screenshot by pressing printscreen
+bindsym Print exec gnome-screenshot -i
+#crop-area screenshot by pressing Mod + printscreen
+bindsym $mod+Print exec gnome-screenshot -a
+
 exec_always --no-startup-id feh --bg-scale $HOME/Projects/dotfiles/static/wallpaper.jpg
 exec_always --no-startup-id xkbcomp -I$HOME/.xkb $HOME/.keymap.xkb $DISPLAY
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
