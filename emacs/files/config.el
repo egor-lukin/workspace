@@ -27,7 +27,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Projects/gtd/")
+(setq org-directory "~/Projects/notes/")
 
 (setq org-super-agenda-groups
       '((:name "Log\n"
@@ -49,8 +49,12 @@
                :scheduled past)))
 
 (setq org-agenda-files (quote ("~/Projects/gtd")))
+;; (setq org-journal-enable-agenda-integration t)
 
 (setq org-download-dir "~/Projects/notes/img")
+(setq-default org-download-image-dir "~/Projects/notes/img")
+;; (setq org-download-screenshot-method "gnome-screenshot")
+(add-hook 'dired-mode-hook 'org-download-enable)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -118,13 +122,22 @@
 
 (setq ein:output-area-inlined-images t)
 
-
 ;; Google Translate Integration
 (global-set-key "\C-ct" 'google-translate-at-point)
+(global-set-key "\C-cr" 'google-translate-at-point-reverse)
 (global-set-key "\C-cT" 'google-translate-query-translate)
 
 (setq google-translate-default-source-language '"en")
 (setq google-translate-default-target-language '"ru")
+
+;; Search failed problem fix
+;; https://github.com/atykhonov/google-translate/issues/52
+(use-package google-translate
+  :ensure t
+  :custom
+  (google-translate-backend-method 'curl)
+  :config
+   (defun google-translate--search-tkk () "Search TKK." (list 430675 2721866130)))
 
 (setq browse-url-browser-function 'eww-browse-url)
 
@@ -182,7 +195,7 @@
 
 (use-package org-journal
   :custom
-  (org-journal-date-prefix "#+title: ")
+  (org-journal-date-prefix "* ")
   (org-journal-file-format "%Y-%m-%d.org")
   (org-journal-dir "~/Projects/notes")
   (org-journal-date-format "%A, %d %B %Y"))
@@ -193,3 +206,24 @@
         :desc "org-journal-new-entry" "n" #'org-journal-new-entry
         :desc "org-journal-search-forever" "s" #'org-journal-search-forever
         :desc "org-journal-read-entry" "r" #'org-journal-read-entry))
+
+(setq elfeed-feeds
+      '("https://hnrss.org/best"
+        "https://www.lesswrong.com/feed.xml?view=curated-rss"
+        "https://lesswrong.ru/rss.xml"))
+
+(use-package org-mind-map
+  :init
+  (require 'ox-org)
+  :ensure t
+  ;; Uncomment the below if 'ensure-system-packages` is installed
+  ;;:ensure-system-package (gvgen . graphviz)
+  :config
+  (setq org-mind-map-engine "dot")       ; Default. Directed Graph
+  ;; (setq org-mind-map-engine "neato")  ; Undirected Spring Graph
+  ;; (setq org-mind-map-engine "twopi")  ; Radial Layout
+  ;; (setq org-mind-map-engine "fdp")    ; Undirected Spring Force-Directed
+  ;; (setq org-mind-map-engine "sfdp")   ; Multiscale version of fdp for the layout of large graphs
+  ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
+  ;; (setq org-mind-map-engine "circo")  ; Circular Layout
+  )
