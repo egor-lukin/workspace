@@ -249,3 +249,35 @@
     wget https://github.com/roboll/helmfile/releases/download/v{{ helmfile_version }}/helmfile_linux_amd64
     sudo chmod +x helmfile_linux_amd64
     sudo mv helmfile_linux_amd64 /usr/local/bin/helmfile
+
+- name: Check helm_diff
+  command: helm plugin list | grep diff
+  register: helm_diff
+  failed_when: helm_diff.rc != 1 and helm_diff.rc != 0
+
+- name: Install helm_diff
+  when: helm_diff.stdout == ""
+  shell: |
+    helm plugin install https://github.com/databus23/helm-diff
+
+- name: Check yandex cloud
+  command: which yc
+  register: yc
+  failed_when: yc.rc != 1 and yc.rc != 0
+
+
+- name: Install yandex cloud
+  when: yc.stdout == ""
+  shell: |
+    curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+
+- name: Check skaffold
+  command: which skaffold
+  register: skaffold
+  failed_when: skaffold.rc != 1 and skaffold.rc != 0
+
+- name: Install skaffold
+  when: skaffold.stdout == ""
+  shell: |
+    curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+    sudo install skaffold /usr/local/bin/
