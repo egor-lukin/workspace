@@ -58,7 +58,7 @@ font-2 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center =
-modules-right = filesystem xbacklight alsa xkeyboard memory cpu wlan battery temperature date
+modules-right = filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
 
 tray-position = right
 tray-padding = 2
@@ -209,7 +209,7 @@ interval = 2
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #f90000
-label = %percentage:2%%
+label = CPU: %percentage:2%%
 
 [module/memory]
 type = internal/memory
@@ -217,7 +217,7 @@ interval = 2
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #4bffdc
-label = %percentage_used%%
+label = Mem: %percentage_used%%
 
 [module/wlan]
 type = internal/network
@@ -226,7 +226,7 @@ interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>
 format-connected-underline = #9f78e1
-label-connected = %essid%
+label-connected = Wifi: %essid%
 
 format-disconnected =
 ;format-disconnected = <label-disconnected>
@@ -361,6 +361,20 @@ animation-discharging-2 = 
 animation-discharging-foreground = ${colors.foreground-alt}
 animation-discharging-framerate = 750
 
+label-charging = Battery: %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current discharge rate in watts)
+label-discharging = Battery: %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+label-full = Fully charged
+
 [module/temperature]
 type = internal/temperature
 thermal-zone = 0
@@ -466,3 +480,8 @@ margin-bottom = 5
 # ; containing 'code' in the label
 # ; Default: false
 # fuzzy-match = true
+
+[module/kubecontext]
+type = custom/script
+exec = "kubectl config current-context"
+interval = 10
