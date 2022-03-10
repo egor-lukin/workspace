@@ -58,7 +58,7 @@ font-2 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center =
-modules-right = filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
+modules-right = timer filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
 
 tray-position = right
 tray-padding = 2
@@ -264,8 +264,8 @@ interval = 5
 date =" %d-%m"
 date-alt = " %Y-%m-%d"
 
-time = %H:%M
-time-alt = %H:%M:%S
+time = %H:%M %a (%z)
+time-alt = %H:%M:%S %a (%z)
 
 # format-prefix = 
 # format-prefix-foreground = ${colors.foreground-alt}
@@ -361,7 +361,7 @@ animation-discharging-2 = 
 animation-discharging-foreground = ${colors.foreground-alt}
 animation-discharging-framerate = 750
 
-label-charging = Battery: %percentage%%
+label-charging = Battery: %percentage%% (charging)
 
 ; Available tokens:
 ;   %percentage% (default) - is set to 100 if full-at is reached
@@ -484,4 +484,9 @@ margin-bottom = 5
 [module/kubecontext]
 type = custom/script
 exec = "kubectl config current-context"
+interval = 10
+
+[module/timer]
+type = custom/script
+exec = "emacsclient -s /run/user/1000/emacs/server --eval '(polybar-current-clock-line)'"
 interval = 10
