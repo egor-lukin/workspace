@@ -12,7 +12,7 @@ alias drma='docker ps -aq | xargs docker rm -f'
 alias docker_runit='docker run -it --rm $@'
 alias docker_runit_here='docker run -v $(PWD):/app -w /app -it --rm $@'
 alias dpsa='docker ps -a'
-alias dcrs='docker-compose run --service-ports'
+alias dcrs='docker-compose run --service-ports --use-aliases'
 
 # Vagrant aliases
 alias v='vagrant'
@@ -87,5 +87,3 @@ PROMPT_COMMAND=set_prompt
 export VISUAL="vim"
 export PATH=$HOME/bin:$PATH
 export PATH="/home/azx/Projects:${PATH}"
-
-# source <(kubectl completion bash)
