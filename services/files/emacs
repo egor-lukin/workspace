@@ -1,0 +1,12 @@
+[Unit]
+Description=Emacs text editor
+
+[Service]
+Type=simple
+ExecStart=/snap/bin/emacs --daemon --with-x-toolkit=lucid
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
