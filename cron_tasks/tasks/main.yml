@@ -1,6 +1,0 @@
-- name: Sync notes dir
-  cron:
-    name: "Sync notes dir"
-    minute: "*/10"
-    job: |
-      bash {{ playbook_dir }}/cron_tasks/files/update_notes.sh

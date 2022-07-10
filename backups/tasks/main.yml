@@ -1,8 +1,0 @@
-- name: Create cron task for backup
-  cron:
-    name: "create backup"
-    weekday: "6"
-    hour: "10"
-    minute: "0"
-    job: |
-      bash {{ playbook_dir }}/backups/files/backup.sh

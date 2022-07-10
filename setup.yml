@@ -3,7 +3,6 @@
 - hosts: local
   roles:
     - { role: packages }
-    - { role: cron_tasks }
     - { role: configs }
     - { role: keybindings }
     - { role: angstwad.docker_ubuntu, docker_group_members: [azx], become: yes }
