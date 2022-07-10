@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRS='/home/azx/Projects /home/azx/org /home/azx/pass'
+DIRS='/home/azx/Projects/notes /home/azx/pass'
 STORAGE=/home/azx/backups
 
 VAULT_PASS_PATH=/home/azx/Projects/dotfiles/ansible_pass.txt

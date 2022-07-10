@@ -5,9 +5,16 @@
     state: link
   with_items:
     - { src: '{{ playbook_dir }}/services/files/syncthing', dest: '/etc/systemd/user/syncthing@.service' }
+    - { src: '{{ playbook_dir }}/services/files/emacs', dest: '/etc/systemd/user/emacs.service' }
 
 - name: enable synthing
   systemd:
     name: syncthing@azx.service
+    state: started
+    enabled: yes
+
+- name: enable emacs
+  systemd:
+    name: emacs
     state: started
     enabled: yes

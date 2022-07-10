@@ -9,6 +9,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     state: link
+    force: yes
   with_items:
     - { src: '{{ playbook_dir }}/configs/files/bashrc', dest: '~/.bashrc' }
     - { src: '{{ playbook_dir }}/configs/files/vimrc', dest: '~/.config/nvim/init.vim' }
@@ -17,3 +18,4 @@
     - { src: '{{ playbook_dir }}/configs/files/polybar', dest: '~/.config/polybar/config' }
     - { src: '{{ playbook_dir }}/configs/files/launch.sh', dest: '~/.config/polybar/launch.sh' }
     - { src: '{{ playbook_dir }}/configs/files/offlineimap', dest: '~/.offlineimaprc' }
+    - { src: '{{ playbook_dir }}/configs/files/k9s/skin.yaml', dest: '~/.k9s/skin.yaml' }

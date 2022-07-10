@@ -58,7 +58,7 @@ font-2 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center =
-modules-right = timer filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
+modules-right = quote timer filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
 
 tray-position = right
 tray-padding = 2
@@ -490,3 +490,8 @@ interval = 10
 type = custom/script
 exec = "emacsclient -s /run/user/1000/emacs/server --eval '(polybar-current-clock-line)'"
 interval = 10
+
+[module/quote]
+type = custom/script
+exec = "echo 'think on english, please'"
+# interval = 10000

@@ -41,6 +41,7 @@ bindsym $mod+Shift+q kill
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 bindsym $mod+d exec --no-startup-id j4-dmenu-desktop
+# bindsym $mod+d exec --no-startup-id dmenu_run
 
 bindsym $mod+Shift+b exec --no-startup-id i3lock -c 000000
 bindsym $mod+Shift+e exec --no-startup-id emacs
@@ -187,7 +188,12 @@ bindsym Print exec gnome-screenshot -i
 #crop-area screenshot by pressing Mod + printscreen
 bindsym $mod+Print exec gnome-screenshot -a
 
+#bindsym $mod+t exec $HOME/trans-notify.sh
+
+bindsym $mod+Shift+p exec passmenu
+
 exec_always --no-startup-id hsetroot -solid "#000000"
 exec_always --no-startup-id xkbcomp -I$HOME/.xkb $HOME/.keymap.xkb $DISPLAY
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always --no-startup-id rescuetime
+# exec_always --no-startup-id rescuetime
+# exec_always --no-startup-id fluxgui

@@ -47,6 +47,10 @@
       - zsh
       - graphviz
       - git-crypt
+      - wireshark
+      - ncdu
+      - inotify-tools
+      - hsetroot
 
 
 - name: Install ripgrep
