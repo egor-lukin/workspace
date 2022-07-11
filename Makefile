@@ -6,3 +6,6 @@ prepare:
 
 setup:
 	ansible-playbook -i hosts setup.yml --ask-become-pass -vvvv
+
+check:
+	ansible-playbook -i hosts setup.yml --ask-become-pass --check -vvvv
