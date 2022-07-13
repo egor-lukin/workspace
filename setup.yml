@@ -2,8 +2,21 @@
 
 - hosts: local
   roles:
+    - {
+        role: rvm.ruby,
+        tags: ruby,
+        become: yes,
+        rvm1_rubies: ['ruby-2.5.1', 'ruby-3.0.0'],
+        rvm1_install_flags: '--auto-dotfiles',
+        rvm1_install_path: /usr/local/bin/rvm,
+        rvm1_user: root
+      }
+    - {
+        role: angstwad.docker_ubuntu,
+        docker_group_members: [azx],
+        become: yes
+      }
     - { role: packages }
     - { role: configs }
     - { role: keybindings }
-    - { role: angstwad.docker_ubuntu, docker_group_members: [azx], become: yes }
     - { role: services, become: yes }
