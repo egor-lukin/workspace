@@ -51,7 +51,11 @@
       - ncdu
       - inotify-tools
       - hsetroot
-
+      - pandoc
+      - texlive-latex-base
+      - texlive-fonts-recommended
+      - texlive-extra-utils
+      - texlive-latex-extra
 
 - name: Install ripgrep
   become: true
@@ -263,17 +267,6 @@
   when: helm_diff.stdout == ""
   shell: |
     helm plugin install https://github.com/databus23/helm-diff
-
-- name: Check yandex cloud
-  command: which yc
-  register: yc
-  failed_when: yc.rc != 1 and yc.rc != 0
-
-
-- name: Install yandex cloud
-  when: yc.stdout == ""
-  shell: |
-    curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
 
 - name: Check skaffold
   command: which skaffold
