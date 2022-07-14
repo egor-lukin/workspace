@@ -1,4 +1,4 @@
 ### Dotfiles
 
-1. prepare: `make prepare`
-2. setup: `make setup`
+1. Prepare: `make install && make deps`
+2. Setup: `make setup`

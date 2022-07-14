@@ -4,7 +4,6 @@
     pkg:
       - software-properties-common
 
-
 # - name: Add an oracle_vbox_2016 apt key
 #   become: true
 #   apt_key:
