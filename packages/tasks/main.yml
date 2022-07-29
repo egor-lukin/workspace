@@ -4,25 +4,12 @@
     pkg:
       - software-properties-common
 
-# - name: Add an oracle_vbox_2016 apt key
-#   become: true
-#   apt_key:
-#     url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
-#     state: present
 
-
-# - name: Add an oracle_vbox apt key
-#   become: true
-#   apt_key:
-#     url: https://www.virtualbox.org/download/oracle_vbox.asc
-#     state: present
-
-
-# - name: Add virtualbox repo
-#   become: true
-#   apt_repository:
-#     repo: deb http://download.virtualbox.org/virtualbox/debian bionic contrib
-#     state: present
+- name: Add virtualbox repo
+  become: true
+  apt_repository:
+    repo: deb http://download.virtualbox.org/virtualbox/debian bionic contrib
+    state: present
 
 
 - name: Install packages
@@ -56,17 +43,14 @@
       - texlive-extra-utils
       - texlive-latex-extra
 
-- name: Install ripgrep
-  become: true
-  snap:
-    name: ripgrep
-    classic: yes
 
-- name: Install ngrok
+- name: Install packages by snap
   become: true
   snap:
-    name: ngrok
-    classic: yes
+    name:
+      - languagetool
+      - ripgrep
+      - ngrok
 
 
 - name: Install Vim Plug
