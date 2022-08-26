@@ -3,6 +3,15 @@
 - hosts: local
   roles:
     - {
+        role: angstwad.docker_ubuntu,
+        docker_group_members: [azx],
+        become: yes
+      }
+    - { role: packages, tags: 'packages' }
+    - { role: configs }
+    - { role: keybindings }
+    - { role: services, become: yes }
+    - {
         role: rvm.ruby,
         tags: ruby,
         become: yes,
@@ -11,12 +20,3 @@
         rvm1_install_path: /usr/local/bin/rvm,
         rvm1_user: root
       }
-    - {
-        role: angstwad.docker_ubuntu,
-        docker_group_members: [azx],
-        become: yes
-      }
-    - { role: packages }
-    - { role: configs }
-    - { role: keybindings }
-    - { role: services, become: yes }
