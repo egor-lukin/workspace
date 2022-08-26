@@ -58,7 +58,7 @@ font-2 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center =
-modules-right = quote timer filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
+modules-right = timer filesystem xbacklight alsa xkeyboard kubecontext memory cpu wlan battery temperature date
 
 tray-position = right
 tray-padding = 2
