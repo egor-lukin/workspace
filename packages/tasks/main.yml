@@ -4,17 +4,18 @@
     pkg:
       - software-properties-common
 
-
-- name: Add virtualbox repo
+- name: Add apk repositories
   become: true
   apt_repository:
-    repo: deb http://download.virtualbox.org/virtualbox/debian bionic contrib
-    state: present
-
+    repo: "{{ item.repo }}"
+    state: "{{ item.state }}"
+  with_items:
+    - { repo: "deb http://download.virtualbox.org/virtualbox/debian bionic contrib", state: present }
 
 - name: Install packages
   become: true
   apt:
+    update_cache: true
     pkg:
       - unzip
       - neovim
@@ -42,7 +43,14 @@
       - texlive-fonts-recommended
       - texlive-extra-utils
       - texlive-latex-extra
+      - ranger
 
+- name: Install a .deb package from the internet.
+  become: yes
+  apt:
+    deb: "{{ item.url }}"
+  with_items:
+    - { url: "https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3236.80/pritunl-client-electron_1.2.3236.80-0ubuntu1.bionic_amd64.deb" }
 
 - name: Install packages by snap
   become: true
@@ -51,6 +59,7 @@
       - languagetool
       - ripgrep
       - ngrok
+      - grafana
 
 
 - name: Install Vim Plug

@@ -9,5 +9,8 @@ deps:
 setup:
 	ansible-playbook -i hosts setup.yml --ask-become-pass -vvvv
 
+update_packages:
+	ansible-playbook -i hosts setup.yml --ask-become-pass -vvvv --tags "packages"
+
 check:
 	ansible-playbook -i hosts setup.yml --ask-become-pass --check -vvvv
