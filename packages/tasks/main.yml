@@ -61,6 +61,11 @@
       - ngrok
       - grafana
 
+- name: Install packages by snap with classic option
+  become: true
+  snap:
+    name: lefthook
+    classic: yes
 
 - name: Install Vim Plug
   shell: |
