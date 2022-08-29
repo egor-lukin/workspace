@@ -135,7 +135,7 @@
 
 - name: Install terraform
   vars:
-    tf_version: 0.12.29
+    tf_version: 1.2.8
   when: terraform.stdout == ""
   shell: |
     wget https://releases.hashicorp.com/terraform/{{ tf_version }}/terraform_{{ tf_version}}_linux_amd64.zip
