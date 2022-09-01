@@ -19,3 +19,4 @@
     - { src: '{{ playbook_dir }}/configs/files/launch.sh', dest: '~/.config/polybar/launch.sh' }
     - { src: '{{ playbook_dir }}/configs/files/offlineimap', dest: '~/.offlineimaprc' }
     - { src: '{{ playbook_dir }}/configs/files/k9s/skin.yaml', dest: '~/.k9s/skin.yaml' }
+    - { src: '{{ playbook_dir }}/doom.d', dest: '~/.doom.d' }
