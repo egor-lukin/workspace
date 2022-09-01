@@ -44,6 +44,9 @@
       - texlive-extra-utils
       - texlive-latex-extra
       - ranger
+      - qtpass
+      - clamav
+      - clamtk
 
 - name: Install a .deb package from the internet.
   become: yes
@@ -51,6 +54,7 @@
     deb: "{{ item.url }}"
   with_items:
     - { url: "https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3236.80/pritunl-client-electron_1.2.3236.80-0ubuntu1.bionic_amd64.deb" }
+    - { url: "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb" }
 
 - name: Install packages by snap
   become: true

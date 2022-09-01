@@ -12,5 +12,8 @@ setup:
 update_packages:
 	ansible-playbook -i hosts setup.yml --ask-become-pass -vvvv --tags "packages"
 
+upgrade_packages:
+	ansible-playbook -i hosts upgrade.yml --ask-become-pass -vvvv
+
 check:
 	ansible-playbook -i hosts setup.yml --ask-become-pass --check -vvvv
