@@ -4,7 +4,7 @@ install:
 	sudo apt install ansible
 
 deps:
-	ansible-galaxy install -fr requirements.yml --roles-path ./ansible-deps
+	ansible-galaxy install -fr requirements.yml --roles-path ./roles
 
 setup:
 	ansible-playbook -i hosts setup.yml --ask-become-pass -vvvv
