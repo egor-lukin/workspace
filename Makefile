@@ -1,7 +1,7 @@
 install:
 	sudo apt-add-repository ppa:ansible/ansible
 	sudo apt update
-	sudo apt install ansible
+	sudo apt install make git ansible
 
 deps:
 	ansible-galaxy install -fr requirements.yml --roles-path ./roles

@@ -4,19 +4,15 @@
     pkg:
       - software-properties-common
 
-- name: Add apk repositories
-  become: true
-  apt_repository:
-    repo: "{{ item.repo }}"
-    state: "{{ item.state }}"
-  with_items:
-    - { repo: "deb http://download.virtualbox.org/virtualbox/debian bionic contrib", state: present }
-
 - name: Install packages
   become: true
   apt:
     update_cache: true
     pkg:
+      - xsel
+      - gnome-tweaks
+      - libtool-bin
+      - cmake
       - unzip
       - neovim
       - syncthing
@@ -24,7 +20,7 @@
       - silversearcher-ag
       - texlive-full
       - j4-dmenu-desktop
-      - virtualbox-6.0
+      - virtualbox
       - zeal
       - vlc
       - keepassxc
@@ -47,14 +43,24 @@
       - qtpass
       - clamav
       - clamtk
+      - emacs
+      - nodejs
+      - yarn
+      - adb
+      - obs-studio
+      - ruby-dev
+      - libpq-dev
+      - redis-tools
 
 - name: Install a .deb package from the internet.
   become: yes
   apt:
     deb: "{{ item.url }}"
   with_items:
-    - { url: "https://github.com/pritunl/pritunl-client-electron/releases/download/1.2.3236.80/pritunl-client-electron_1.2.3236.80-0ubuntu1.bionic_amd64.deb" }
     - { url: "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb" }
+    - { url: "https://prerelease.keybase.io/keybase_amd64.deb" }
+    - { url: "https://zoom.us/client/5.11.10.4400/zoom_amd64.deb" }
+
 
 - name: Install packages by snap
   become: true
@@ -64,218 +70,14 @@
       - ripgrep
       - ngrok
       - grafana
-
-- name: Install packages by snap with classic option
-  become: true
-  snap:
-    name: lefthook
+      - lefthook
+      - slack
+      - k9s
+      - kubectl
+      - heroku
     classic: yes
 
 - name: Install Vim Plug
   shell: |
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-
-- name: Check anki
-  command: which anki
-  register: anki
-
-
-- name: Install anki
-  when: anki.stdout == ""
-  shell: |
-    wget -P ~/Downloads/ https://github.com/ankitects/anki/releases/download/2.1.22/anki-2.1.22-linux-amd64.tar.bz2
-    tar xjf ~/Downloads/anki-2.1.22-linux-amd64.tar.bz2
-    cd anki-2.1.22-linux-amd64
-    sudo make install
-
-
-- name: Check kubectl
-  command: which kubectl
-  register: kubectl
-  failed_when: kubectl.rc != 1 and kubectl.rc != 0
-
-
-- name: Install kubectl
-  when: kubectl.stdout == ""
-  shell: |
-    curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-    chmod +x ./kubectl
-    sudo mv ./kubectl /usr/local/bin/kubectl
-
-
-- name: Check minikube
-  command: which minikube
-  register: minikube
-  failed_when: minikube.rc != 1 and minikube.rc != 0
-
-
-- name: Install minikube
-  when: minikube.stdout == ""
-  shell: |
-    curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube
-    sudo mkdir -p /usr/local/bin/
-    sudo install minikube /usr/local/bin/
-
-
-- name: Check helm
-  command: which helm
-  register: helm
-  failed_when: helm.rc != 1 and helm.rc != 0
-
-
-- name: Install helm
-  when: helm.stdout == ""
-  shell: |
-    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
-
-
-- name: Check terraform
-  command: which terraform
-  register: terraform
-  failed_when: terraform.rc != 1 and terraform.rc != 0
-
-
-- name: Install terraform
-  vars:
-    tf_version: 1.2.8
-  when: terraform.stdout == ""
-  shell: |
-    wget https://releases.hashicorp.com/terraform/{{ tf_version }}/terraform_{{ tf_version}}_linux_amd64.zip
-    unzip terraform_{{ tf_version }}_linux_amd64.zip
-    sudo mv terraform /usr/local/bin/
-
-
-- name: Check packer
-  command: which packer
-  register: packer
-  failed_when: packer.rc != 1 and packer.rc != 0
-
-
-- name: Install packer
-  vars:
-    packer_version: 1.6.0
-  when: packer.stdout == ""
-  shell: |
-    wget https://releases.hashicorp.com/packer/{{ packer_version }}/packer_{{ packer_version }}_linux_amd64.zip
-    unzip packer_{{ packer_version }}_linux_amd64.zip
-    sudo mv packer /usr/local/bin/
-
-
-- name: Check kind
-  command: which kind
-  register: kind
-  failed_when: kind.rc != 1 and kind.rc != 0
-
-
-- name: Install kind
-  vars:
-    kind_version: 0.8.1
-  when: kind.stdout == ""
-  shell: |
-    curl -Lo ./kind https://kind.sigs.k8s.io/dl/v{{ kind_version }}/kind-linux-amd64
-    chmod +x ./kind
-    sudo mv ./kind /usr/local/bin/kind
-
-
-- name: Check kubespy
-  command: which kubespy
-  register: kubespy
-  failed_when: kubespy.rc != 1 and kubespy.rc != 0
-
-
-- name: Install kubespy
-  vars:
-    kubespy_version: 0.5.1
-  when: kubespy.stdout == ""
-  shell: |
-    wget https://github.com/pulumi/kubespy/releases/download/v{{ kubespy_version }}/kubespy-linux-amd64.tar.gz
-    tar -zxvf kubespy-linux-amd64.tar.gz
-    sudo mv releases/kubespy-linux-amd64/kubespy /usr/local/bin/
-    rm -rf releases
-
-
-- name: Check vagrant
-  command: which vagrant
-  register: vagrant
-  failed_when: vagrant.rc != 1 and vagrant.rc != 0
-
-
-- name: Install vagrant
-  vars:
-    vagrant_version: 2.2.10
-  when: vagrant.stdout == ""
-  shell: |
-    wget https://releases.hashicorp.com/vagrant/{{ vagrant_version }}/vagrant_{{ vagrant_version }}_linux_amd64.zip
-    unzip vagrant_{{ vagrant_version }}_linux_amd64.zip
-    sudo mv vagrant /usr/local/bin/
-
-
-- name: Check sops
-  command: which sops
-  register: sops
-  failed_when: sops.rc != 1 and sops.rc != 0
-
-
-- name: Install sops
-  vars:
-    sops_version: 3.6.1
-  when: sops.stdout == ""
-  shell: |
-    wget https://github.com/mozilla/sops/releases/download/v{{ sops_version }}/sops-v{{ sops_version }}.linux
-    sudo chmod +x sops-v{{ sops_version }}.linux
-    sudo mv sops-v{{ sops_version }}.linux /usr/local/bin/sops
-
-
-- name: Check kubecfg
-  command: which kubecfg
-  register: kubecfg
-  failed_when: kubecfg.rc != 1 and kubecfg.rc != 0
-
-
-- name: Install kubecfg
-  vars:
-    kubecfg_version: 0.16.0
-  when: kubecfg.stdout == ""
-  shell: |
-    wget https://github.com/bitnami/kubecfg/releases/download/v{{ kubecfg_version }}/kubecfg-linux-amd64
-    sudo chmod +x kubecfg-linux-amd64
-    sudo mv kubecfg-linux-amd64 /usr/local/bin/kubecfg
-
-
-- name: Check helmfile
-  command: which helmfile
-  register: helmfile
-  failed_when: helmfile.rc != 1 and helmfile.rc != 0
-
-
-- name: Install helmfile
-  vars:
-    helmfile_version: 0.130.0
-  when: helmfile.stdout == ""
-  shell: |
-    wget https://github.com/roboll/helmfile/releases/download/v{{ helmfile_version }}/helmfile_linux_amd64
-    sudo chmod +x helmfile_linux_amd64
-    sudo mv helmfile_linux_amd64 /usr/local/bin/helmfile
-
-- name: Check helm_diff
-  command: helm plugin list | grep diff
-  register: helm_diff
-  failed_when: helm_diff.rc != 1 and helm_diff.rc != 0
-
-- name: Install helm_diff
-  when: helm_diff.stdout == ""
-  shell: |
-    helm plugin install https://github.com/databus23/helm-diff
-
-- name: Check skaffold
-  command: which skaffold
-  register: skaffold
-  failed_when: skaffold.rc != 1 and skaffold.rc != 0
-
-- name: Install skaffold
-  when: skaffold.stdout == ""
-  shell: |
-    curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
-    sudo install skaffold /usr/local/bin/
