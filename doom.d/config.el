@@ -4,24 +4,24 @@
 
 (setq doom-theme 'doom-gruvbox-light)
 
-(setq doom-font (font-spec :family "monospace" :size 24 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 24))
+(setq doom-font (font-spec :family "monospace" :size 36 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 36))
 
 (setq display-line-numbers-type t)
 
 (after! org
-  (setq org-directory "~/Projects/org/"))
+  (setq org-directory "~/org/"))
 
 (after! org
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAIT" "SKIP" "DELEGATED" "SCHEDULED" "|" "DONE" "CLOSED")))
+        '((sequence "TODO" "IN-PROGRESS" "WAIT" "SKIP" "DELEGATED" "SCHEDULED" "|" "DONE" "CLOSED" "MOVED")))
   (setq org-agenda-files '("roam/gtd/gtd.org" "roam/gtd/backlog.org" "roam/gtd/routines.org" "roam/gtd/birthday.org" "roam/gtd/scheduled.org")))
 
 (setq org-refile-targets
-      '(("~/Projects/org/roam/gtd/gtd.org" :maxlevel . 2)
-        ("~/Projects/org/roam/gtd/routines.org" :maxlevel . 2)
-        ("~/Projects/org/roam/gtd/scheduled.org" :maxlevel . 2)
-        ("~/Projects/org/roam/gtd/backlog.org" :maxlevel . 2)))
+      '(("~/org/roam/gtd/gtd.org" :maxlevel . 2)
+        ("~/org/roam/gtd/routines.org" :maxlevel . 2)
+        ("~/org/roam/gtd/scheduled.org" :maxlevel . 2)
+        ("~/org/roam/gtd/backlog.org" :maxlevel . 2)))
 
 (setq org-download-dir "~/photos/org")
 
@@ -30,7 +30,7 @@
   (setq org-log-into-drawer t))
 
 (after! org
-  (setq org-archive-location "~/Projects/org/roam/gtd/gtd_archive.org::"))
+  (setq org-archive-location "~/org/roam/gtd/archived/09-2022.org::"))
 
 (require 'org-habit)
 (setq org-habit-show-habits-only-for-today t)
@@ -67,26 +67,55 @@
 
 (after! elfeed
   (setq elfeed-feeds
-        '(("https://hnrss.org/best" "hn" "tech")
+        '(("https://hnrss.org/best" hn tech)
           "https://www.lesswrong.com/feed.xml?view=curated-rss"
           "https://slatestarcodex.com/feed/"
           "https://lifehacker.com/rss"
           "https://hackaday.com/blog/feed/"
           "https://feeds.arstechnica.com/arstechnica/index"
           "https://mindingourway.com/rss/"
-          "https://www.reddit.com/r/Biohackers/.rss"
-          "https://www.reddit.com/r/QuantifiedSelf/.rss"
-          "https://www.reddit.com/r/kubernetes/.rss"
-          "https://www.reddit.com/r/GUIX/.rss"
-          "https://www.reddit.com/r/emacs/.rss"
-          "https://www.reddit.com/r/orgmode/.rss"
-          "https://www.reddit.com/r/selfhosted/.rss"
+          ("https://www.reddit.com/r/Biohackers/.rss" redit)
+          ("https://www.reddit.com/r/QuantifiedSelf/.rss" redit)
+          ("https://www.reddit.com/r/kubernetes/.rss" redit)
+          ("https://www.reddit.com/r/GUIX/.rss" redit)
+          ("https://www.reddit.com/r/emacs/.rss" redit)
+          ("https://www.reddit.com/r/orgmode/.rss" redit)
+          ("https://www.reddit.com/r/selfhosted/.rss" redit)
           "https://reminder.media/rss"
-          "https://lesswrong.ru/rss.xml")))
+          "https://lesswrong.ru/rss.xml"
+          ("https://tg.i-c-a.su/rss/tbilisi_pike" tg)
+          ("https://tg.i-c-a.su/rss/emigriceps" tg)
+          ("https://tg.i-c-a.su/rss/rebrain_devops" tg)
+          ("https://tg.i-c-a.su/rss/addmeto" tg)
+          ("https://tg.i-c-a.su/rss/nestarenieRU" tg)
+          ("https://tg.i-c-a.su/rss/pmdaily" tg)
+          ("https://tg.i-c-a.su/rss/ctodaily" tg)
+          ("https://tg.i-c-a.su/rss/Faguet" tg)
+          ("https://tg.i-c-a.su/rss/yurydud" tg)
+          ("https://tg.i-c-a.su/rss/zareshai_channel" tg)
+          ("https://tg.i-c-a.su/rss/zamesin" tg)
+          ("https://tg.i-c-a.su/rss/ontologics" tg)
+          ("https://tg.i-c-a.su/rss/pepegramming" tg)
+          ("https://tg.i-c-a.su/rss/evtuhovich_sect" tg)
+          ("https://tg.i-c-a.su/rss/tasteofrain" tg)
+          ("https://tg.i-c-a.su/rss/samurai_haiku" tg)
+          ("https://tg.i-c-a.su/rss/news_clj" tg)
+          ("https://tg.i-c-a.su/rss/Matskevich" tg)
+          ("https://tg.i-c-a.su/rss/OpenLongevity_ru" tg)
+          ("https://tg.i-c-a.su/rss/nadyathinks" tg)
+          ("https://tg.i-c-a.su/rss/meta_texts" tg)
+          ("https://tg.i-c-a.su/rss/RationalAnswer" tg)
+          ("https://tg.i-c-a.su/rss/lesswrong_ru_news" tg)
+          ("https://tg.i-c-a.su/rss/Shmit16" tg)
+          ("https://tg.i-c-a.su/rss/nikitonsky_pub" tg)
+          ("https://tg.i-c-a.su/rss/varlamov_news" tg)
+          ("https://tg.i-c-a.su/rss/mnogosdelal" tg)
+          ("https://tg.i-c-a.su/rss/ea_kocherga" tg)
+          )))
 
 (after! org-roam
-  (setq org-roam-directory "~/Projects/org/roam")
-  (setq org-roam-db-location  "~/Projects/org/roam/org-roam.db")
+  (setq org-roam-directory "~/org/roam")
+  (setq org-roam-db-location  "~/org/roam/org-roam.db")
 
   (setq org-roam-dailies-capture-templates
         '(("d" "default" entry
@@ -122,6 +151,8 @@
         :desc "org-roam-dailies-goto-today" "d" #'org-roam-dailies-goto-today
         :desc "org-roam-buffer" "l" #'org-roam-buffer
         :desc "org-roam-show-graph" "g" #'org-roam-show-graph
+        :desc "org-roam-dailies-find-next-note" "n" #'org-roam-dailies-find-next-note
+        :desc "org-roam-dailies-find-previous-note" "p" #'org-roam-dailies-find-previous-note
         :desc "org-roam-capture" "c" #'org-roam-capture))
 
 ;; %Y-%m-%d.org
@@ -143,7 +174,7 @@
            (file+headline "roam/gtd/gtd.org" "Inbox")
            (file "templates/external.org")))))
 
-(setq deft-directory "~/Projects/org")
+(setq deft-directory "~/org")
 (setq deft-extensions '("txt" "tex" "org"))
 (setq deft-recursive t)
 
@@ -171,6 +202,7 @@
                    "eog"
                    '(file))
              '("\\.pdf" "evince" (file))
+             '("\\.djvu" "evince" (file))
              ))
 
 (defvar polybar--default-header "no active clocks!")
@@ -188,11 +220,11 @@
         (polybar--format-line header time))
     polybar--default-header))
 
-(setq hledger-jfile "~/Projects/org/finances/ledger.journal")
+(setq hledger-jfile "~/org/finances/ledger.journal")
 
 ;; Develop in ~/emacs.d/mysnippets, but also
 ;; try out snippets in ~/Downloads/interesting-snippets
-(setq yas-snippet-dirs '("~/Projects/snippets"
+(setq yas-snippet-dirs '("~/org/snippets"
                          "~/emacs.d/mysnippets"))
 
 (use-package! reverso)
