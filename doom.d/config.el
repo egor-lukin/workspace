@@ -113,13 +113,14 @@
           ("https://tg.i-c-a.su/rss/ea_kocherga" tg)
           )))
 
-(defun my/org-roam-node-find-by-tag ()
+(defun my/org-roam-node-find-by-directory ()
   (interactive)
-  (let ((tag (read-string "Enter tag: ")))
+  (let* ((directories '("tasks" "literate" "conceptual" "projects" "planning"))
+        (directory (completing-read "Enter directory: " directories)))
     (org-roam-node-find t nil
                         (lambda (node)
                           (let ((tags (org-roam-node-tags node)))
-                            (member tag tags))))))
+                            (member directory tags))))))
 
 (after! org-roam
   (setq org-roam-directory "~/org/roam")
@@ -134,7 +135,7 @@
   (setq org-roam-capture-templates
         '(("t" "Task note" plain
            "%?"
-           :if-new (file+head "tasks/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :task\n")
+           :if-new (file+head "tasks/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :tasks\n")
            :unnarrowed t)
           ("l" "Literate note" plain
            "%?"
@@ -148,14 +149,14 @@
            :unnarrowed t)
           ("p" "Project note" plain
            "%?"
-           :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :project\n")
+           :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :projects\n")
            :unnarrowed t)))
 
   (map! :leader
         :prefix "r"
         :desc "org-roam-node-insert" "i" #'org-roam-node-insert
         :desc "org-roam-node-find" "f" #'org-roam-node-find
-        :desc "org-roam-node-find-by-tag" "t" #'my/org-roam-node-find-by-tag
+        :desc "org-roam-node-find-by-directory" "t" #'my/org-roam-node-find-by-directory
         :desc "org-roam-dailies-goto-date" "s" #'org-roam-dailies-goto-date
         :desc "org-roam-dailies-goto-today" "d" #'org-roam-dailies-goto-today
         :desc "org-roam-buffer" "l" #'org-roam-buffer
