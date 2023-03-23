@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    leaks-detect:
+      glob: "*"
+      run: docker run -v .:/path zricethezav/gitleaks:latest detect --source="/path"
+    leaks-protect:
+      glob: "*"
+      run: docker run -v .:/path zricethezav/gitleaks:latest protect --source="/path"
