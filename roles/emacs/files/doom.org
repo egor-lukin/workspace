@@ -172,16 +172,26 @@
 (setq user-full-name "Egor Lukin"
       user-mail-address "lukin.net@gmail.com")
 #+end_src
+
+# You need to change your terminal emulator preferences to allow login shell.
+# Sometimes it is required to use `/bin/bash --login` as the command.
+# Please visit https://rvm.io/integration/gnome-terminal/ for a example.
+#+begin_src elisp :tangle config.el
+(setq multi-term-program-switches "--login")
+#+end_src
 ** UI
 Setup Emacs theme:
 #+begin_src elisp :tangle config.el
-(setq doom-theme 'doom-gruvbox-light)
+;; (setq doom-theme 'doom-gruvbox-light)
+;; (setq doom-theme 'doom-palenight)
+;; (setq doom-theme 'doom-moonlight)
+(setq doom-theme 'doom-dracula)
 #+end_src
 
 Setup font:
 #+begin_src elisp :tangle config.el
-(setq doom-font (font-spec :family "monospace" :size 36 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 36))
+(setq doom-font (font-spec :family "monospace" :size 42 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 42))
 #+end_src
 
 This determines the style of line numbers in effect. If set to `nil', line numbers disabled. For relative line numbers, set this to `relative'.
@@ -262,6 +272,8 @@ fuzzy search by default
 
 (setq google-translate-default-source-language '"en")
 (setq google-translate-default-target-language '"ru")
+
+(setq google-translate-backend-method 'curl)
 #+end_src
 
 Fix problem with searching https://github.com/atykhonov/google-translate/issues/52
@@ -281,52 +293,7 @@ Fix problem with searching https://github.com/atykhonov/google-translate/issues/
 ** Elfeed RSS
 #+begin_src elisp :tangle config.el
 (after! elfeed
-  (setq elfeed-feeds
-        '(("https://hnrss.org/best" hn tech)
-          "https://www.lesswrong.com/feed.xml?view=curated-rss"
-          "https://slatestarcodex.com/feed/"
-          "https://lifehacker.com/rss"
-          "https://hackaday.com/blog/feed/"
-          "https://feeds.arstechnica.com/arstechnica/index"
-          "https://mindingourway.com/rss/"
-          ("https://www.reddit.com/r/Biohackers/.rss" redit)
-          ("https://www.reddit.com/r/QuantifiedSelf/.rss" redit)
-          ("https://www.reddit.com/r/kubernetes/.rss" redit)
-          ("https://www.reddit.com/r/GUIX/.rss" redit)
-          ("https://www.reddit.com/r/emacs/.rss" redit)
-          ("https://www.reddit.com/r/orgmode/.rss" redit)
-          ("https://www.reddit.com/r/selfhosted/.rss" redit)
-          "https://reminder.media/rss"
-          "https://lesswrong.ru/rss.xml"
-          ("https://tg.i-c-a.su/rss/tbilisi_pike" tg)
-          ("https://tg.i-c-a.su/rss/emigriceps" tg)
-          ("https://tg.i-c-a.su/rss/rebrain_devops" tg)
-          ("https://tg.i-c-a.su/rss/addmeto" tg)
-          ("https://tg.i-c-a.su/rss/nestarenieRU" tg)
-          ("https://tg.i-c-a.su/rss/pmdaily" tg)
-          ("https://tg.i-c-a.su/rss/ctodaily" tg)
-          ("https://tg.i-c-a.su/rss/Faguet" tg)
-          ("https://tg.i-c-a.su/rss/yurydud" tg)
-          ("https://tg.i-c-a.su/rss/zareshai_channel" tg)
-          ("https://tg.i-c-a.su/rss/zamesin" tg)
-          ("https://tg.i-c-a.su/rss/ontologics" tg)
-          ("https://tg.i-c-a.su/rss/pepegramming" tg)
-          ("https://tg.i-c-a.su/rss/evtuhovich_sect" tg)
-          ("https://tg.i-c-a.su/rss/tasteofrain" tg)
-          ("https://tg.i-c-a.su/rss/samurai_haiku" tg)
-          ("https://tg.i-c-a.su/rss/news_clj" tg)
-          ("https://tg.i-c-a.su/rss/Matskevich" tg)
-          ("https://tg.i-c-a.su/rss/OpenLongevity_ru" tg)
-          ("https://tg.i-c-a.su/rss/nadyathinks" tg)
-          ("https://tg.i-c-a.su/rss/meta_texts" tg)
-          ("https://tg.i-c-a.su/rss/RationalAnswer" tg)
-          ("https://tg.i-c-a.su/rss/lesswrong_ru_news" tg)
-          ("https://tg.i-c-a.su/rss/Shmit16" tg)
-          ("https://tg.i-c-a.su/rss/nikitonsky_pub" tg)
-          ("https://tg.i-c-a.su/rss/varlamov_news" tg)
-          ("https://tg.i-c-a.su/rss/mnogosdelal" tg)
-          ("https://tg.i-c-a.su/rss/ea_kocherga" tg)
-          )))
+  (setq elfeed-search-filter "@1-month-ago +unread"))
 #+end_src
 ** Org-Roam
 #+begin_src elisp :tangle config.el
@@ -384,6 +351,14 @@ Fix problem with searching https://github.com/atykhonov/google-translate/issues/
 #+end_src
 ** Org-Capture
 #+begin_src elisp :tangle config.el
+(defun my/daily-note-filename ()
+  (let ((date (format-time-string "%Y-%m-%d" (current-time))))
+    (concat
+     "~/org/roam/daily/"
+     date
+     ".org")))
+
+
 ;; %Y-%m-%d.org
 (after! org
   (setq org-capture-templates
@@ -393,12 +368,12 @@ Fix problem with searching https://github.com/atykhonov/google-translate/issues/
           ("e" "English word" entry
            (file+headline "anki/english_words.org" "Backlog")
            (file "templates/english_words.org"))
-          ("b" "Add bookmark" entry
-           (file+headline "roam/notes/bookmarks.org" "Inbox")
-           (file "templates/bookmarks.org"))
-          ("c" "Todo from x clipboard" entry
-           (file+headline "roam/gtd/gtd.org" "Inbox")
-           (file "templates/external.org")))))
+          ("m" "Write message" entry
+           (file+headline (lambda () (my/daily-note-filename)) "messages")
+           (file "templates/message.org"))
+          ("b" "Add entry to daily buffer" entry
+           (file+headline (lambda () (my/daily-note-filename)) "buffer")
+           (file "templates/buffer.org")))))
 #+end_src
 ** Deft
 #+begin_src elisp :tangle config.el
@@ -417,7 +392,94 @@ Fix problem with searching https://github.com/atykhonov/google-translate/issues/
 (map! :leader
       (:prefix-map ("b" . "babel")
        :desc "org-babel-execute-src-block" "b" #'org-babel-execute-buffer))
+
+(setq org-babel-pry-command "pry")
 #+end_src
+
+#+begin_src elisp
+;; (defun org-babel-execute:pry (body params)
+;;   "Execute a block of ruby code with pry."
+;;   (message "executing ruby source code block in pry")
+;;   (string-remove-suffix "\\\"" (string-remove-prefix "\"" (string-remove-prefix "[0G" (org-babel-eval "~/.gems/bin/pry" body)))))
+
+(defun org-babel-execute:pry (body params)
+  "Execute a block of ruby code with pry."
+  (message "executing ruby source code block in pry")
+  (substring (org-babel-eval "~/.gems/bin/pry" body) 5 -2))
+#+end_src
+
+#+RESULTS:
+: org-babel-execute:pry
+
+#+begin_src elisp
+(defvar c (org-babel-eval "~/.gems/bin/pry" "hello_world"))
+
+(defvar b
+  (string-remove-prefix "[0G"
+    (org-babel-eval "~/.gems/bin/pry" "hello_world")))
+
+(string-remove-prefix "\"" (string-remove-suffix "\"" b))
+(string-remove-suffix "\\\"" b)
+b
+c
+(defvar d (substring c 5 -2))
+d
+(print d)
+
+(replace-regexp-in-string "\\\\" "\\" d)
+;; (replace-regexp-in-string "\\\\\\(.\\|\n\\)" "\\1" d)
+#+end_src
+
+#+begin_src pry :results value raw
+hello_world
+#+end_src
+
+#+RESULTS:
+hello world
+
+#+begin_src ruby
+
+p "hello\nworld"
+#+end_src
+
+#+RESULTS:
+: hello
+: world
+
+org-block formatting
+
+#+begin_src pry :results value raw
+question = <<HEREDOC
+I want you to act as a Life Coach. Please summarize this non-fiction book, Tools of Titans by Tim Ferris. Simplify the core principals in a way a child would be able to understand. Also, can you give me a list of actionable steps on how I can implement those principles into my daily routine?
+HEREDOC
+
+chat_gpt(question)
+#+end_src
+
+#+RESULTS:
+I want you to act as a Life Coach. Please summarize this non-fiction book, Tools of Titans by Tim Ferris. Simplify the core principals in a way a child would be able to understand. Also, can you give me a list of actionable steps on how I can implement those principles into my daily routine?\n"
+"Tools of Titans by Tim Ferriss is a book that shares the success secrets of over 200 world-class performers. The core principles of this book can be simplified as follows: strive to be the best version of yourself, stay focused on your goals, work hard, be persistent, and learn from failure. To implement these principles in your daily life, here are some actionable steps you can take:
+
+Set specific and achievable goals for yourself each day.
+Make a plan to achieve those goals and stick to it.
+Identify the obstacles that may prevent you from reaching your goals, and come up with strategies to overcome them.
+Make time for regular self-reflection and feedback.
+Push yourself out of your comfort zone and challenge yourself to learn new skills.
+Surround yourself with people who can motivate and inspire you.
+Celebrate your successes, no matter how small, and learn from your mistakes.
+
+#+begin_src pry :results value raw
+question = <<HEREDOC
+list 10 ways to become a better programmer?
+HEREDOC
+
+chat_gpt(question)
+#+end_src
+
+#+RESULTS:
+list 10 ways to become a better programmer?\n"
+"Here are 10 ways to become a better programmer: \n\nMake use of resources such as tutorials, books, and online courses.\nPractice, practice, practice.\nLearn a new language.\nWork on open-source projects.\nGet involved in the programming community.\nWrite code for fun.\nDevelop problem-solving skills.\nRefactor existing code.\nLearn about software design patterns.\nKeep up with the latest trends and technologies.\n\n
+=> "Here are 10 ways to become a better programmer:\n\nLearn the fundamentals of programming.\nPractice regularly and create projects.\nUtilize resources like books and online tutorials.\nLearn coding best practices.\nGet feedback from experienced developers.\nStay up-to-date on new programming tools and technologies.\nJoin a coding community.\nTake online coding courses.\nAttend hackathons and coding events.\nPair program with experienced developers.\n\n"
 
 ** Org-Clock
 #+begin_src elisp :tangle config.el
@@ -455,14 +517,18 @@ Show current active clock in polybar.
   (concat task " ("(number-to-string time) " min)"))
 
 (defun polybar-current-clock-line ()
-  (if (org-clocking-p)
-      (let ((header org-clock-heading)
-            (time
-             (floor
-              (org-time-convert-to-integer (time-since org-clock-start-time))
-              60)))
-        (polybar--format-line header time))
-    polybar--default-header))
+  (interactive)
+  (message
+   (if (org-clocking-p)
+       (let ((header org-clock-heading)
+             (time
+              (floor
+               (org-time-convert-to-integer (time-since org-clock-start-time))
+               60)))
+         (polybar--format-line header time))
+     polybar--default-header)))
+
+(map! :leader :prefix "b" :desc "polybar-current-clock-line" "c" #'polybar-current-clock-line)
 #+end_src
 ** Hledger
 #+begin_src elisp :tangle config.el
@@ -493,6 +559,45 @@ Setup my custom script for working with Reverso search:
         :desc "reverso-reverse-search" "r" #'reverso-reverse-search))
 #+end_src
 ** Yasnippets
+** EShell
+#+begin_src elisp :tangle config.el
+ (defun eshell-load-bash-aliases ()
+    "Read Bash aliases and add them to the list of eshell aliases."
+    ;; Bash needs to be run - temporarily - interactively
+    ;; in order to get the list of aliases.
+      (with-temp-buffer
+        (call-process "bash" nil '(t nil) nil "-ci" "alias")
+        (goto-char (point-min))
+        (while (re-search-forward "alias \\(.+\\)='\\(.+\\)'$" nil t)
+          (eshell/alias (match-string 1) (match-string 2)))))
+#+end_src
+** Helm Dash
+#+begin_src elisp
+(setq helm-dash-docsets-path "~/.docsets")
+
+(map! :leader
+      :prefix "l"
+      :desc "helm-dash-at-point" "p" #'helm-dash-at-point
+      :desc "helm-dash-at-point" "f" #'helm-dash)
+#+end_src
+
+** Bookmarks
+#+begin_src elisp
+(map! :leader
+      :prefix "b"
+      :desc "list-bookmarks" "l" #'list-bookmarks
+      :desc "bookmark-delete" "d" #'bookmark-delete
+      :desc "bookmark-set" "s" #'bookmark-set)
+#+end_src
+
+** Clipboard
+#+begin_src elisp :tangle packages.el
+(package! xclip)
+#+end_src
+
+#+begin_src elisp :tangle config.el
+(xclip-mode 1)
+#+end_src
 ** Misc
 Usefull command for deleting file
 #+begin_src elisp :tangle config.el
@@ -546,6 +651,20 @@ Insert photos for selected day
   (interactive)
   (insert (org--photos-list)))
 #+end_src
+** Helpers
+#+begin_src elisp :tangle config.el
+;; (hms-to-pomodoros "1:22")
+(defun hms-to-pomodoros (str)
+  (/ (hms-to-minutes str) 25))
+
+;; (hms-to-minutes "1:12")
+(defun hms-to-minutes (str)
+  (let* ((lst (split-string str ":"))
+         (hour (nth 0 lst))
+         (minute (nth 1 lst)))
+    (+ (* (string-to-number hour) 60)
+       (string-to-number minute))))
+#+end_src
 ** Other
 #+begin_src elisp :tangle config.el
 (setq docker-tramp-use-names t)
@@ -575,7 +694,7 @@ Insert photos for selected day
 (package! company-tabnine)
 (package! graphviz-dot-mode)
 (package! kubernetes-evil)
-(package! org-ql)
+(package! org-ql :recipe (:repo "LukinEgor/org-ql" :branch "file-dynamic-blocks"))
 (package! org-mind-map)
 (package! sound-wav)
 (package! cider)
@@ -596,4 +715,6 @@ Insert photos for selected day
 (package! helm-tramp)
 (package! openwith)
 (package! org-auto-tangle)
+(package! exec-path-from-shell)
+(package! ob-async)
 #+end_src

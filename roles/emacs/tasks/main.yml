@@ -1,0 +1,48 @@
+- name: Install emacs
+  apt:
+    update_cache: true
+    pkg:
+      - emacs
+  tags: remote
+
+- name: Clone doom emacs
+  git:
+    repo: 'https://github.com/doomemacs/doomemacs'
+    dest: '~/.config/emacs'
+    depth: 1
+  tags: remote
+
+- name: Find all files in files
+  delegate_to: localhost
+  find:
+    paths: '{{ role_path }}/files'
+    hidden: true
+    recurse: yes
+  register: find
+
+- name: Ensure dir
+  file:
+    state: directory
+    path: "{{ item.src }}"
+  with_items:
+    - { src: '~/.doom.d' }
+
+- name: Create symlinks
+  file:
+    src: "{{ item.path }}"
+    dest: "~/.doom.d/{{ item.path | relpath(role_path + '/files') }}"
+    state: link
+    force: yes
+  with_items: "{{ find.files }}"
+  tags: local
+
+- name: Copy files
+  copy:
+    src: "{{ item.path }}"
+    dest: "~/.doom.d/{{ item.path | relpath(role_path + '/files') }}"
+    force: yes
+  with_items: "{{ find.files }}"
+  tags: remote
+
+- name: Install doom emacs
+  shell: '~/.config/emacs/bin/doom install --force'

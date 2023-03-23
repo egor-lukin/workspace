@@ -1,5 +1,7 @@
 (package! reverso :recipe (:repo "https://github.com/LukinEgor/reverso-emacs"))
 
+(package! xclip)
+
 (package! anki-editor)
 (package! tramp-term)
 (package! google-translate :pin "6f7b75b2aa1ff4e50b6f1579cafddafae5705dbd")
@@ -14,7 +16,7 @@
 (package! company-tabnine)
 (package! graphviz-dot-mode)
 (package! kubernetes-evil)
-(package! org-ql)
+;; (package! org-ql :recipe (:repo "LukinEgor/org-ql" :branch "file-dynamic-blocks"))
 (package! org-mind-map)
 (package! sound-wav)
 (package! cider)
@@ -35,3 +37,5 @@
 (package! helm-tramp)
 (package! openwith)
 (package! org-auto-tangle)
+(package! exec-path-from-shell)
+(package! ob-async)

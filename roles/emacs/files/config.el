@@ -2,10 +2,15 @@
 (setq user-full-name "Egor Lukin"
       user-mail-address "lukin.net@gmail.com")
 
-(setq doom-theme 'doom-gruvbox-light)
+(setq multi-term-program-switches "--login")
 
-(setq doom-font (font-spec :family "monospace" :size 36 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 36))
+;; (setq doom-theme 'doom-gruvbox-light)
+;; (setq doom-theme 'doom-palenight)
+;; (setq doom-theme 'doom-moonlight)
+(setq doom-theme 'doom-dracula)
+
+(setq doom-font (font-spec :family "monospace" :size 42 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 42))
 
 (setq display-line-numbers-type t)
 
@@ -55,6 +60,8 @@
 (setq google-translate-default-source-language '"en")
 (setq google-translate-default-target-language '"ru")
 
+(setq google-translate-backend-method 'curl)
+
 (use-package google-translate
   ;; :ensure t
   :custom
@@ -66,52 +73,7 @@
 (setq eww-download-directory "~/cached-web-pages")
 
 (after! elfeed
-  (setq elfeed-feeds
-        '(("https://hnrss.org/best" hn tech)
-          "https://www.lesswrong.com/feed.xml?view=curated-rss"
-          "https://slatestarcodex.com/feed/"
-          "https://lifehacker.com/rss"
-          "https://hackaday.com/blog/feed/"
-          "https://feeds.arstechnica.com/arstechnica/index"
-          "https://mindingourway.com/rss/"
-          ("https://www.reddit.com/r/Biohackers/.rss" redit)
-          ("https://www.reddit.com/r/QuantifiedSelf/.rss" redit)
-          ("https://www.reddit.com/r/kubernetes/.rss" redit)
-          ("https://www.reddit.com/r/GUIX/.rss" redit)
-          ("https://www.reddit.com/r/emacs/.rss" redit)
-          ("https://www.reddit.com/r/orgmode/.rss" redit)
-          ("https://www.reddit.com/r/selfhosted/.rss" redit)
-          "https://reminder.media/rss"
-          "https://lesswrong.ru/rss.xml"
-          ("https://tg.i-c-a.su/rss/tbilisi_pike" tg)
-          ("https://tg.i-c-a.su/rss/emigriceps" tg)
-          ("https://tg.i-c-a.su/rss/rebrain_devops" tg)
-          ("https://tg.i-c-a.su/rss/addmeto" tg)
-          ("https://tg.i-c-a.su/rss/nestarenieRU" tg)
-          ("https://tg.i-c-a.su/rss/pmdaily" tg)
-          ("https://tg.i-c-a.su/rss/ctodaily" tg)
-          ("https://tg.i-c-a.su/rss/Faguet" tg)
-          ("https://tg.i-c-a.su/rss/yurydud" tg)
-          ("https://tg.i-c-a.su/rss/zareshai_channel" tg)
-          ("https://tg.i-c-a.su/rss/zamesin" tg)
-          ("https://tg.i-c-a.su/rss/ontologics" tg)
-          ("https://tg.i-c-a.su/rss/pepegramming" tg)
-          ("https://tg.i-c-a.su/rss/evtuhovich_sect" tg)
-          ("https://tg.i-c-a.su/rss/tasteofrain" tg)
-          ("https://tg.i-c-a.su/rss/samurai_haiku" tg)
-          ("https://tg.i-c-a.su/rss/news_clj" tg)
-          ("https://tg.i-c-a.su/rss/Matskevich" tg)
-          ("https://tg.i-c-a.su/rss/OpenLongevity_ru" tg)
-          ("https://tg.i-c-a.su/rss/nadyathinks" tg)
-          ("https://tg.i-c-a.su/rss/meta_texts" tg)
-          ("https://tg.i-c-a.su/rss/RationalAnswer" tg)
-          ("https://tg.i-c-a.su/rss/lesswrong_ru_news" tg)
-          ("https://tg.i-c-a.su/rss/Shmit16" tg)
-          ("https://tg.i-c-a.su/rss/nikitonsky_pub" tg)
-          ("https://tg.i-c-a.su/rss/varlamov_news" tg)
-          ("https://tg.i-c-a.su/rss/mnogosdelal" tg)
-          ("https://tg.i-c-a.su/rss/ea_kocherga" tg)
-          )))
+  (setq elfeed-search-filter "@1-month-ago +unread"))
 
 (defun my/org-roam-node-find-by-directory ()
   (interactive)
@@ -165,6 +127,14 @@
         :desc "org-roam-dailies-find-previous-note" "p" #'org-roam-dailies-find-previous-note
         :desc "org-roam-capture" "c" #'org-roam-capture))
 
+(defun my/daily-note-filename ()
+  (let ((date (format-time-string "%Y-%m-%d" (current-time))))
+    (concat
+     "~/org/roam/daily/"
+     date
+     ".org")))
+
+
 ;; %Y-%m-%d.org
 (after! org
   (setq org-capture-templates
@@ -174,12 +144,12 @@
           ("e" "English word" entry
            (file+headline "anki/english_words.org" "Backlog")
            (file "templates/english_words.org"))
-          ("b" "Add bookmark" entry
-           (file+headline "roam/notes/bookmarks.org" "Inbox")
-           (file "templates/bookmarks.org"))
-          ("c" "Todo from x clipboard" entry
-           (file+headline "roam/gtd/gtd.org" "Inbox")
-           (file "templates/external.org")))))
+          ("m" "Write message" entry
+           (file+headline (lambda () (my/daily-note-filename)) "messages")
+           (file "templates/message.org"))
+          ("b" "Add entry to daily buffer" entry
+           (file+headline (lambda () (my/daily-note-filename)) "buffer")
+           (file "templates/buffer.org")))))
 
 (setq deft-directory "~/org")
 (setq deft-extensions '("txt" "tex" "org"))
@@ -188,6 +158,8 @@
 (map! :leader
       (:prefix-map ("b" . "babel")
        :desc "org-babel-execute-src-block" "b" #'org-babel-execute-buffer))
+
+(setq org-babel-pry-command "pry")
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -218,14 +190,18 @@
   (concat task " ("(number-to-string time) " min)"))
 
 (defun polybar-current-clock-line ()
-  (if (org-clocking-p)
-      (let ((header org-clock-heading)
-            (time
-             (floor
-              (org-time-convert-to-integer (time-since org-clock-start-time))
-              60)))
-        (polybar--format-line header time))
-    polybar--default-header))
+  (interactive)
+  (message
+   (if (org-clocking-p)
+       (let ((header org-clock-heading)
+             (time
+              (floor
+               (org-time-convert-to-integer (time-since org-clock-start-time))
+               60)))
+         (polybar--format-line header time))
+     polybar--default-header)))
+
+(map! :leader :prefix "b" :desc "polybar-current-clock-line" "c" #'polybar-current-clock-line)
 
 (setq hledger-jfile "~/org/finances/ledger.journal")
 
@@ -243,6 +219,18 @@
         :prefix "k"
         :desc "reverso-direct-search" "d" #'reverso-direct-search
         :desc "reverso-reverse-search" "r" #'reverso-reverse-search))
+
+ (defun eshell-load-bash-aliases ()
+    "Read Bash aliases and add them to the list of eshell aliases."
+    ;; Bash needs to be run - temporarily - interactively
+    ;; in order to get the list of aliases.
+      (with-temp-buffer
+        (call-process "bash" nil '(t nil) nil "-ci" "alias")
+        (goto-char (point-min))
+        (while (re-search-forward "alias \\(.+\\)='\\(.+\\)'$" nil t)
+          (eshell/alias (match-string 1) (match-string 2)))))
+
+(xclip-mode 1)
 
 (defun delete-file-and-buffer ()
   "Kill the current buffer and deletes the file it is visiting."
@@ -287,6 +275,18 @@
 (defun org-insert-photos ()
   (interactive)
   (insert (org--photos-list)))
+
+;; (hms-to-pomodoros "1:22")
+(defun hms-to-pomodoros (str)
+  (/ (hms-to-minutes str) 25))
+
+;; (hms-to-minutes "1:12")
+(defun hms-to-minutes (str)
+  (let* ((lst (split-string str ":"))
+         (hour (nth 0 lst))
+         (minute (nth 1 lst)))
+    (+ (* (string-to-number hour) 60)
+       (string-to-number minute))))
 
 (setq docker-tramp-use-names t)
 

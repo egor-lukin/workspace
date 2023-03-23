@@ -1,0 +1,31 @@
+- name: Find all files in files
+  delegate_to: localhost
+  find:
+    paths: '{{ role_path }}/files'
+    hidden: true
+    recurse: yes
+  register: find
+
+- name: Ensure dirs
+  file:
+    state: directory
+    path: "{{ item.src }}"
+  with_items:
+    - { src: '~/.k9s' }
+
+- name: Create symlinks
+  file:
+    src: "{{ item.path }}"
+    dest: "~/{{ item.path | relpath(role_path + '/files') }}"
+    state: link
+    force: yes
+  with_items: "{{ find.files }}"
+  tags: local
+
+- name: Copy files
+  copy:
+    src: "{{ item.path }}"
+    dest: "~/{{ item.path | relpath(role_path + '/files') }}"
+    force: yes
+  with_items: "{{ find.files }}"
+  tags: remote

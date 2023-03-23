@@ -29,6 +29,7 @@ alias gs='git status'
 alias gco='git checkout'
 alias gap='git add -p'
 alias gsl='git stash list'
+alias gaa='git add .; git commit --amend --no-edit'
 
 # Up 'n' folders
 alias ..='cd ..'
@@ -46,6 +47,9 @@ alias cyr='grep "[А-я,Ё,ё]" '
 alias lfe="find . -type f | sed -En 's|.*/[^/]+\.([^/.]+)$|\1|p' | sort -u"
 
 alias pbcopy='xsel --clipboard --input'
+
+alias enw='emacs -nw'
+alias se='eval `ssh-agent`'
 
 ## History configuration
 # Appending history instead of rewriting
@@ -80,7 +84,7 @@ alias __git_ps1="git branch 2>/dev/null | grep '*' | sed 's/* \(.*\)/(\1)/'"
 set_prompt () {
     orange='\[\033[0;33m\]'
     reset='\[\e[00m\]'
-    PS1="$(__git_ps1) $orange\W\$$reset "
+    PS1="$(__git_ps1) \A $orange\W\$$reset "
 }
 PROMPT_COMMAND=set_prompt
 
@@ -104,14 +108,18 @@ export PATH="$FLYCTL_INSTALL/bin:$PATH"
 export PATH=~/.fly/bin:$PATH
 export KUBECONFIG=$HOME/.kube/config
 
+
 export PATH=/home/azx/.gems/bin:$PATH
 
-export PATH=/usr/local/bin/rvm/gems/ruby-3.1.2:$PATH
-export RVM_PATH=/home/azx/.rvm
-
-/usr/local/bin/rvm/gems/ruby-3.1.2
-export RVM_PATH=/home/azx/.rvm
+# export PATH=/usr/local/bin/rvm/gems/ruby-3.1.2:$PATH
+# export RVM_PATH=/home/azx/.rvm
+# export RVM_PATH=/home/azx/.rvm
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# asdf
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+
