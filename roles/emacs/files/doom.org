@@ -262,6 +262,15 @@ fuzzy search by default
 ** Ein
 #+begin_src elisp :tangle config.el
 (setq ein:output-area-inlined-images t)
+
+(map! :leader
+      :prefix "j"
+      :desc "execute cell" "e" #'ein:worksheet-execute-cell
+      :desc "save notebook" "s" #'ein:notebook-save-notebook-command
+      :desc "insert below" "b" #'ein:worksheet-insert-cell-below
+      :desc "insert below" "a" #'ein:worksheet-insert-cell-after
+      :desc "notebook list" "l" #'ein:notebooklist-open
+      )
 #+end_src
 ** Google Translate
 #+begin_src elisp :tangle config.el
@@ -389,9 +398,12 @@ regardless of whether the current buffer is in `eww-mode'."
           ("e" "English word" entry
            (file+headline "anki/english_words.org" "Backlog")
            (file "templates/english_words.org"))
-          ("m" "Write message" entry
-           (file+headline (lambda () (my/daily-note-filename)) "messages")
-           (file "templates/message.org"))
+          ("m" "Mental check-in" entry
+           (file+headline "roam/20201004170026-mental_health_index.org" "Check-ins")
+           (file "templates/mental.org"))
+          ("p" "Physical check-in" entry
+           (file+headline "roam/20201004170236-physical_health_index.org" "Check-ins")
+           (file "templates/mental.org"))
           ("b" "Add entry to daily buffer" entry
            (file+headline (lambda () (my/daily-note-filename)) "buffer")
            (file "templates/buffer.org")))))
@@ -686,6 +698,17 @@ Insert photos for selected day
     (+ (* (string-to-number hour) 60)
        (string-to-number minute))))
 #+end_src
+** Whisper
+#+begin_src elisp :tangle config.el
+(use-package whisper
+  :load-path "path/to/whisper.el"
+  :bind ("C-H-r" . whisper-run)
+  :config
+  (setq whisper-install-directory "~/Projects/whisper.cpp"
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil))
+#+end_src
 ** Other
 #+begin_src elisp :tangle config.el
 (setq docker-tramp-use-names t)
@@ -715,7 +738,7 @@ Insert photos for selected day
 (package! company-tabnine)
 (package! graphviz-dot-mode)
 (package! kubernetes-evil)
-(package! org-ql :recipe (:repo "LukinEgor/org-ql" :branch "file-dynamic-blocks"))
+;; (package! org-ql :recipe (:repo "LukinEgor/org-ql" :branch "file-dynamic-blocks"))
 (package! org-mind-map)
 (package! sound-wav)
 (package! cider)
@@ -727,11 +750,12 @@ Insert photos for selected day
 (package! ereader)
 (package! nov :recipe (:repo "https://depp.brause.cc/nov.el.git"))
 
-(package! telega)
+(package! telega :pin "b7438f8433ac16eff46828973ea68a4082fe66a2")
 (package! magit)
 (package! magit-section)
 
 (package! nmcli-wifi :recipe (:repo "https://github.com/LukinEgor/nmcli-wifi"))
+(package! whisper :recipe (:repo "https://github.com/natrys/whisper.el.git"))
 
 (package! helm-tramp)
 (package! openwith)

@@ -52,6 +52,15 @@
 
 (setq ein:output-area-inlined-images t)
 
+(map! :leader
+      :prefix "j"
+      :desc "execute cell" "e" #'ein:worksheet-execute-cell
+      :desc "save notebook" "s" #'ein:notebook-save-notebook-command
+      :desc "insert below" "b" #'ein:worksheet-insert-cell-below
+      :desc "insert below" "a" #'ein:worksheet-insert-cell-after
+      :desc "notebook list" "l" #'ein:notebooklist-open
+      )
+
 ;; Google Translate Integration
 (global-set-key "\C-ct" 'google-translate-at-point)
 (global-set-key "\C-cr" 'google-translate-at-point-reverse)
@@ -71,6 +80,26 @@
 
 (setq browse-url-browser-function 'eww-browse-url)
 (setq eww-download-directory "~/cached-web-pages")
+
+;; Auto-rename new eww buffers
+(defun xah-rename-eww-hook ()
+  "Rename eww browser's buffer so sites open in new page."
+  (rename-buffer "eww" t))
+(add-hook 'eww-mode-hook #'xah-rename-eww-hook)
+----------------------------------------------------------------------------------------------------------------------------------------
+
+If you'd like to spawn a new eww buffer while being in an eww buffer, eval the below advice (you will still need to eval the above so
+that new eww buffers are assigned unique names).
+
+;; C-u M-x eww will force a new eww buffer
+(defun modi/force-new-eww-buffer (orig-fun &rest args)
+  "When prefix argument is used, a new eww buffer will be created,
+regardless of whether the current buffer is in `eww-mode'."
+  (if current-prefix-arg
+      (with-temp-buffer
+        (apply orig-fun args))
+    (apply orig-fun args)))
+(advice-add 'eww :around #'modi/force-new-eww-buffer)
 
 (after! elfeed
   (setq elfeed-search-filter "@1-month-ago +unread"))
@@ -144,9 +173,12 @@
           ("e" "English word" entry
            (file+headline "anki/english_words.org" "Backlog")
            (file "templates/english_words.org"))
-          ("m" "Write message" entry
-           (file+headline (lambda () (my/daily-note-filename)) "messages")
-           (file "templates/message.org"))
+          ("m" "Mental check-in" entry
+           (file+headline "roam/20201004170026-mental_health_index.org" "Check-ins")
+           (file "templates/mental.org"))
+          ("p" "Physical check-in" entry
+           (file+headline "roam/20201004170236-physical_health_index.org" "Check-ins")
+           (file "templates/mental.org"))
           ("b" "Add entry to daily buffer" entry
            (file+headline (lambda () (my/daily-note-filename)) "buffer")
            (file "templates/buffer.org")))))
@@ -287,6 +319,15 @@
          (minute (nth 1 lst)))
     (+ (* (string-to-number hour) 60)
        (string-to-number minute))))
+
+(use-package whisper
+  :load-path "path/to/whisper.el"
+  :bind ("C-H-r" . whisper-run)
+  :config
+  (setq whisper-install-directory "~/Projects/whisper.cpp"
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil))
 
 (setq docker-tramp-use-names t)
 

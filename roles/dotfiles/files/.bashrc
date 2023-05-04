@@ -123,3 +123,10 @@ export NVM_DIR="$HOME/.nvm"
 . $HOME/.asdf/asdf.sh
 . $HOME/.asdf/completions/asdf.bash
 
+
+alias yt-dl='docker run \
+                  --rm -i \
+                  -e PGID=$(id -g) \
+                  -e PUID=$(id -u) \
+                  -v "$(pwd)/Downloads":/home/dockeruser:rw \
+                  mikenye/youtube-dl'

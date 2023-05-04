@@ -28,11 +28,12 @@
 (package! ereader)
 (package! nov :recipe (:repo "https://depp.brause.cc/nov.el.git"))
 
-(package! telega)
+(package! telega :pin "b7438f8433ac16eff46828973ea68a4082fe66a2")
 (package! magit)
 (package! magit-section)
 
 (package! nmcli-wifi :recipe (:repo "https://github.com/LukinEgor/nmcli-wifi"))
+(package! whisper :recipe (:repo "https://github.com/natrys/whisper.el.git"))
 
 (package! helm-tramp)
 (package! openwith)

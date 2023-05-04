@@ -3,3 +3,4 @@
 - src: stefangweichinger.ansible_rclone
 # https://github.com/geerlingguy/ansible-role-docker
 - src: geerlingguy.docker
+- src: nginxinc.nginx
