@@ -8,3 +8,6 @@ deps:
 
 sync:
 	ansible-playbook -i hosts dev.yml --ask-become-pass -vvvv
+
+upgrade:
+	ansible-playbook -i hosts upgrade.yml --ask-become-pass -vvvv
