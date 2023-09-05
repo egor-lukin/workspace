@@ -62,20 +62,20 @@
     - { url: "https://prerelease.keybase.io/keybase_amd64.deb" }
     - { url: "https://zoom.us/client/5.15.11.7239/zoom_amd64.deb" }
 
-# - name: Install packages by snap
-#   become: true
-#   snap:
-#     name:
-#       - languagetool
-#       - ripgrep
-#       - ngrok
-#       - grafana
-#       - lefthook
-#       - slack
-#       - k9s
-#       - kubectl
-#       - heroku
-#     classic: yes
+- name: Install packages by snap
+  become: true
+  snap:
+    name:
+      - languagetool
+      - ripgrep
+      - ngrok
+      - grafana
+      - lefthook
+      - slack
+      - k9s
+      - kubectl
+      - heroku
+    classic: yes
 
 - name: Install viddy
   shell: "go install github.com/sachaos/viddy@latest"
