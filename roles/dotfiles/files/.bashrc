@@ -105,6 +105,8 @@ export PATH=/home/azx/.gems/bin:$PATH
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
+export TERM=xterm-256color
+
 # export PATH=/usr/local/bin/rvm/gems/ruby-3.1.2:$PATH
 # export RVM_PATH=/home/azx/.rvm
 # export RVM_PATH=/home/azx/.rvm
