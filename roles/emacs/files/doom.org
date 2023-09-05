@@ -286,7 +286,7 @@ Set default file for all archived items:
 #+end_src
 ** Projectile
 #+begin_src elisp :tangle config.el
-(setq projectile-project-search-path '("~/Projects/"))
+(setq projectile-project-search-path '("~/dev"))
 #+end_src
 ** Search
 fuzzy search by default
