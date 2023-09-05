@@ -1,5 +1,3 @@
-(package! reverso :recipe (:repo "https://github.com/LukinEgor/reverso-emacs"))
-
 (package! xclip)
 
 (package! anki-editor)
@@ -17,6 +15,7 @@
 (package! graphviz-dot-mode)
 (package! kubernetes-evil)
 ;; (package! org-ql :recipe (:repo "LukinEgor/org-ql" :branch "file-dynamic-blocks"))
+(package! org-ql)
 (package! org-mind-map)
 (package! sound-wav)
 (package! cider)
@@ -40,3 +39,8 @@
 (package! org-auto-tangle)
 (package! exec-path-from-shell)
 (package! ob-async)
+
+(package! org-ai
+  :recipe (:host github
+           :repo "rksm/org-ai"
+           :files ("*.el" "README.md" "snippets")))

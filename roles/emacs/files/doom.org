@@ -105,7 +105,7 @@
        ;;faust             ; dsp, but you get to keep your soul
        ;;fsharp           ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
-       ;; go                ; the hipster dialect
+       go                ; the hipster dialect
        ;;(haskell +dante)  ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
@@ -184,20 +184,41 @@ Setup Emacs theme:
 #+begin_src elisp :tangle config.el
 ;; (setq doom-theme 'doom-gruvbox-light)
 ;; (setq doom-theme 'doom-palenight)
-;; (setq doom-theme 'doom-moonlight)
+; (setq doom-theme 'doom-moonlight)
 (setq doom-theme 'doom-dracula)
 #+end_src
 
 Setup font:
 #+begin_src elisp :tangle config.el
-(setq doom-font (font-spec :family "monospace" :size 42 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 42))
+(setq doom-font (font-spec :family "monospace" :size 38 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 38))
 #+end_src
 
 This determines the style of line numbers in effect. If set to `nil', line numbers disabled. For relative line numbers, set this to `relative'.
 #+begin_src elisp :tangle config.el
 (setq display-line-numbers-type t)
 #+end_src
+** Notes
+#+begin_src elisp :tangle config.el
+;; (require 'seq)
+;; (require 'cl-lib)
+
+(setq gtd/dir "/home/azx/org/roam/gtd/")
+(setq gtd/files '("gtd.org" "backlog.org" "archieved.org"))
+
+(defun gtd/all-files ()
+  (mapcar
+   (lambda (f) (concat gtd/dir f))
+   (append
+    (seq-filter
+     (lambda (f) (not(member f '("." ".."))))
+     (directory-files (concat gtd/dir "archived")))
+    gtd/files)))
+
+;; (type-of (gtd/all-files))
+;; (type-of '("a"))
+#+end_src
+
 ** Org Mode :ATTACH:
 :PROPERTIES:
 :ID:       6c295031-b966-4f74-a575-135f6a0a4830
@@ -213,6 +234,11 @@ Setup org directory.
   (setq org-todo-keywords
         '((sequence "TODO" "IN-PROGRESS" "WAIT" "SKIP" "DELEGATED" "SCHEDULED" "|" "DONE" "CLOSED" "MOVED")))
   (setq org-agenda-files '("roam/gtd/gtd.org" "roam/gtd/backlog.org" "roam/gtd/routines.org" "roam/gtd/birthday.org" "roam/gtd/scheduled.org")))
+
+;; (after! org
+;;   (setq org-todo-keywords
+;;         '((sequence "TODO" "WAIT" "SCHEDULED" "|" "DONE" "CLOSED")))
+;;   (setq org-agenda-files (gtd/all-files)))
 #+end_src
 
 #+begin_src elisp :tangle config.el
@@ -231,13 +257,12 @@ Setup org directory.
 (after! org
   (setq org-log-done t)
   (setq org-log-into-drawer t))
-
 #+end_src
 
 Set default file for all archived items:
 #+begin_src elisp :tangle config.el
 (after! org
-  (setq org-archive-location "~/org/roam/gtd/archived/09-2022.org::"))
+  (setq org-archive-location "~/org/roam/gtd/archieved.org::"))
 #+end_src
 ** Org habits
 #+begin_src elisp :tangle config.el
@@ -245,6 +270,19 @@ Set default file for all archived items:
 (setq org-habit-show-habits-only-for-today t)
 (setq org-habit-preceding-days 25)
 (setq org-habit-following-days 3)
+#+end_src
+** Org AI
+#+begin_src elisp :tangle config.el
+;; (use-package org-ai
+;;   :ensure t
+;;   :commands (org-ai-mode
+;;              org-ai-global-mode)
+;;   :init
+;;   (add-hook 'org-mode-hook #'org-ai-mode) ; enable org-ai in org-mode
+;;   (org-ai-global-mode) ; installs global keybindings on C-c M-a
+;;   :config
+;;   (setq org-ai-default-chat-model "gpt-4") ; if you are on the gpt-4 beta:
+;;   (org-ai-install-yasnippets)) ; if you are using yasnippet and want `ai` snippets
 #+end_src
 ** Projectile
 #+begin_src elisp :tangle config.el
@@ -304,11 +342,6 @@ Fix problem with searching https://github.com/atykhonov/google-translate/issues/
   "Rename eww browser's buffer so sites open in new page."
   (rename-buffer "eww" t))
 (add-hook 'eww-mode-hook #'xah-rename-eww-hook)
-----------------------------------------------------------------------------------------------------------------------------------------
-
-If you'd like to spawn a new eww buffer while being in an eww buffer, eval the below advice (you will still need to eval the above so
-that new eww buffers are assigned unique names).
-
 ;; C-u M-x eww will force a new eww buffer
 (defun modi/force-new-eww-buffer (orig-fun &rest args)
   "When prefix argument is used, a new eww buffer will be created,
@@ -377,6 +410,7 @@ regardless of whether the current buffer is in `eww-mode'."
         :desc "org-roam-show-graph" "g" #'org-roam-show-graph
         :desc "org-roam-dailies-find-next-note" "n" #'org-roam-dailies-find-next-note
         :desc "org-roam-dailies-find-previous-note" "p" #'org-roam-dailies-find-previous-note
+        :desc "org-roam-buffer-toggle" "b" #'org-roam-buffer-toggle
         :desc "org-roam-capture" "c" #'org-roam-capture))
 #+end_src
 ** Org-Capture
@@ -387,7 +421,6 @@ regardless of whether the current buffer is in `eww-mode'."
      "~/org/roam/daily/"
      date
      ".org")))
-
 
 ;; %Y-%m-%d.org
 (after! org
@@ -574,23 +607,6 @@ Show current active clock in polybar.
 (setq yas-snippet-dirs '("~/org/snippets"
                          "~/emacs.d/mysnippets"))
 #+end_src
-** Reverso
-Setup my custom script for working with Reverso search:
-#+begin_src elisp :tangle packages.el
-(package! reverso :recipe (:repo "https://github.com/LukinEgor/reverso-emacs"))
-#+end_src
-
-#+begin_src elisp :tangle config.el
-(use-package! reverso)
-(after! reverso
-  (setq reverso-default-source-lang "english")
-  (setq reverso-default-target-lang "russian")
-
-  (map! :leader
-        :prefix "k"
-        :desc "reverso-direct-search" "d" #'reverso-direct-search
-        :desc "reverso-reverse-search" "r" #'reverso-reverse-search))
-#+end_src
 ** Yasnippets
 ** EShell
 #+begin_src elisp :tangle config.el
@@ -739,6 +755,7 @@ Insert photos for selected day
 (package! graphviz-dot-mode)
 (package! kubernetes-evil)
 ;; (package! org-ql :recipe (:repo "LukinEgor/org-ql" :branch "file-dynamic-blocks"))
+(package! org-ql)
 (package! org-mind-map)
 (package! sound-wav)
 (package! cider)
@@ -762,4 +779,9 @@ Insert photos for selected day
 (package! org-auto-tangle)
 (package! exec-path-from-shell)
 (package! ob-async)
+
+(package! org-ai
+  :recipe (:host github
+           :repo "rksm/org-ai"
+           :files ("*.el" "README.md" "snippets")))
 #+end_src

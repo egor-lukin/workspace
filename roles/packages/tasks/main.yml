@@ -10,13 +10,13 @@
     update_cache: true
     pkg:
       - xsel
-      # - gnome-tweaks
+      - gnome-tweaks
       - libtool-bin
       - cmake
       - unzip
       - neovim
       - syncthing
-      # - tmux
+      - tmux
       - silversearcher-ag
       - texlive-full
       - j4-dmenu-desktop
@@ -40,7 +40,6 @@
       - texlive-extra-utils
       - texlive-latex-extra
       - ranger
-      # - qtpass
       - clamav
       - clamtk
       - emacs
@@ -61,8 +60,7 @@
   with_items:
     - { url: "https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb" }
     - { url: "https://prerelease.keybase.io/keybase_amd64.deb" }
-    - { url: "https://zoom.us/client/5.11.10.4400/zoom_amd64.deb" }
-
+    - { url: "https://zoom.us/client/5.15.11.7239/zoom_amd64.deb" }
 
 # - name: Install packages by snap
 #   become: true
@@ -78,3 +76,6 @@
 #       - kubectl
 #       - heroku
 #     classic: yes
+
+- name: Install viddy
+  shell: "go install github.com/sachaos/viddy@latest"

@@ -6,13 +6,31 @@
 
 ;; (setq doom-theme 'doom-gruvbox-light)
 ;; (setq doom-theme 'doom-palenight)
-;; (setq doom-theme 'doom-moonlight)
+; (setq doom-theme 'doom-moonlight)
 (setq doom-theme 'doom-dracula)
 
-(setq doom-font (font-spec :family "monospace" :size 42 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 42))
+(setq doom-font (font-spec :family "monospace" :size 38 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 38))
 
 (setq display-line-numbers-type t)
+
+;; (require 'seq)
+;; (require 'cl-lib)
+
+(setq gtd/dir "/home/azx/org/roam/gtd/")
+(setq gtd/files '("gtd.org" "backlog.org" "archieved.org"))
+
+(defun gtd/all-files ()
+  (mapcar
+   (lambda (f) (concat gtd/dir f))
+   (append
+    (seq-filter
+     (lambda (f) (not(member f '("." ".."))))
+     (directory-files (concat gtd/dir "archived")))
+    gtd/files)))
+
+;; (type-of (gtd/all-files))
+;; (type-of '("a"))
 
 (after! org
   (setq org-directory "~/org/"))
@@ -21,6 +39,11 @@
   (setq org-todo-keywords
         '((sequence "TODO" "IN-PROGRESS" "WAIT" "SKIP" "DELEGATED" "SCHEDULED" "|" "DONE" "CLOSED" "MOVED")))
   (setq org-agenda-files '("roam/gtd/gtd.org" "roam/gtd/backlog.org" "roam/gtd/routines.org" "roam/gtd/birthday.org" "roam/gtd/scheduled.org")))
+
+;; (after! org
+;;   (setq org-todo-keywords
+;;         '((sequence "TODO" "WAIT" "SCHEDULED" "|" "DONE" "CLOSED")))
+;;   (setq org-agenda-files (gtd/all-files)))
 
 (setq org-refile-targets
       '(("~/org/roam/gtd/gtd.org" :maxlevel . 2)
@@ -35,12 +58,23 @@
   (setq org-log-into-drawer t))
 
 (after! org
-  (setq org-archive-location "~/org/roam/gtd/archived/09-2022.org::"))
+  (setq org-archive-location "~/org/roam/gtd/archieved.org::"))
 
 (require 'org-habit)
 (setq org-habit-show-habits-only-for-today t)
 (setq org-habit-preceding-days 25)
 (setq org-habit-following-days 3)
+
+;; (use-package org-ai
+;;   :ensure t
+;;   :commands (org-ai-mode
+;;              org-ai-global-mode)
+;;   :init
+;;   (add-hook 'org-mode-hook #'org-ai-mode) ; enable org-ai in org-mode
+;;   (org-ai-global-mode) ; installs global keybindings on C-c M-a
+;;   :config
+;;   (setq org-ai-default-chat-model "gpt-4") ; if you are on the gpt-4 beta:
+;;   (org-ai-install-yasnippets)) ; if you are using yasnippet and want `ai` snippets
 
 (setq projectile-project-search-path '("~/Projects/"))
 
@@ -86,11 +120,6 @@
   "Rename eww browser's buffer so sites open in new page."
   (rename-buffer "eww" t))
 (add-hook 'eww-mode-hook #'xah-rename-eww-hook)
-----------------------------------------------------------------------------------------------------------------------------------------
-
-If you'd like to spawn a new eww buffer while being in an eww buffer, eval the below advice (you will still need to eval the above so
-that new eww buffers are assigned unique names).
-
 ;; C-u M-x eww will force a new eww buffer
 (defun modi/force-new-eww-buffer (orig-fun &rest args)
   "When prefix argument is used, a new eww buffer will be created,
@@ -154,6 +183,7 @@ regardless of whether the current buffer is in `eww-mode'."
         :desc "org-roam-show-graph" "g" #'org-roam-show-graph
         :desc "org-roam-dailies-find-next-note" "n" #'org-roam-dailies-find-next-note
         :desc "org-roam-dailies-find-previous-note" "p" #'org-roam-dailies-find-previous-note
+        :desc "org-roam-buffer-toggle" "b" #'org-roam-buffer-toggle
         :desc "org-roam-capture" "c" #'org-roam-capture))
 
 (defun my/daily-note-filename ()
@@ -162,7 +192,6 @@ regardless of whether the current buffer is in `eww-mode'."
      "~/org/roam/daily/"
      date
      ".org")))
-
 
 ;; %Y-%m-%d.org
 (after! org
@@ -241,16 +270,6 @@ regardless of whether the current buffer is in `eww-mode'."
 ;; try out snippets in ~/Downloads/interesting-snippets
 (setq yas-snippet-dirs '("~/org/snippets"
                          "~/emacs.d/mysnippets"))
-
-(use-package! reverso)
-(after! reverso
-  (setq reverso-default-source-lang "english")
-  (setq reverso-default-target-lang "russian")
-
-  (map! :leader
-        :prefix "k"
-        :desc "reverso-direct-search" "d" #'reverso-direct-search
-        :desc "reverso-reverse-search" "r" #'reverso-reverse-search))
 
  (defun eshell-load-bash-aliases ()
     "Read Bash aliases and add them to the list of eshell aliases."

@@ -17,12 +17,12 @@
     state: directory
     path: "{{ item.src }}"
   with_items:
-    - { src: '~/.doom.d' }
+    - { src: '~/.config/doom' }
 
 - name: Create symlinks
   file:
     src: "{{ item.path }}"
-    dest: "~/.doom.d/{{ item.path | relpath(role_path + '/files') }}"
+    dest: "~/.config/doom/{{ item.path | relpath(role_path + '/files') }}"
     state: link
     force: yes
   with_items: "{{ find.files }}"

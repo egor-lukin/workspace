@@ -20,12 +20,3 @@
     state: link
     force: yes
   with_items: "{{ find.files }}"
-  tags: local
-
-- name: Copy files
-  copy:
-    src: "{{ item.path }}"
-    dest: "~/{{ item.path | relpath(role_path + '/files') }}"
-    force: yes
-  with_items: "{{ find.files }}"
-  tags: remote
