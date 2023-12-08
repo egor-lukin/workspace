@@ -210,11 +210,14 @@ This determines the style of line numbers in effect. If set to `nil', line numbe
   (mapcar
    (lambda (f) (concat gtd/dir f))
    (append
-    (seq-filter
-     (lambda (f) (not(member f '("." ".."))))
-     (directory-files (concat gtd/dir "archived")))
+    (mapcar
+     (lambda (f) (concat "archived/" f))
+     (seq-filter
+      (lambda (f) (not(member f '("." ".."))))
+      (directory-files (concat gtd/dir "archived"))))
     gtd/files)))
 
+(gtd/all-files)
 ;; (type-of (gtd/all-files))
 ;; (type-of '("a"))
 #+end_src
