@@ -1,0 +1,61 @@
+#+title: Workspace
+
+* Intro
+* Env vars
+#+begin_src sh :tangle init.sh
+cp -n .env_example .env
+source .env
+#+end_src
+* Ubuntu Packages
+#+begin_src sh :tangle init.sh
+sudo apt install $(grep -Ev '^\s*#' packages/apt | xargs)
+sudo snap install $(grep -Ev '^\s*#' packages/snap | xargs)
+#+end_src
+* Emacs
+#+begin_src sh :tangle init.sh
+cp -n emacs/secrets.el.example emacs/secrets.el
+git clone https://github.com/doomemacs/doomemacs ~/.config/emacs
+ln -s ~/workspace/emacs ~/.config/doom
+~/.config/emacs/bin/doom install --force
+#+end_src
+* Dotfiles
+#+begin_src sh :tangle init.sh
+ln -s ~/workspace/dotfiles/bashrc ~/.bashrc
+ln -s ~/workspace/dotfiles/gitconfig ~/.gitconfig
+ln -s ~/workspace/dotfiles/pryrc ~/.pryrc
+ln -s ~/workspace/dotfiles/tmux.conf ~/.tmux.conf
+ln -s ~/workspace/dotfiles/vimrc ~/.vimrc
+ln -s ~/workspace/dotfiles/k9s ~/.k9s
+ln -s ~/workspace/dotfiles/tool-versions ~/.tool-versions
+#+end_src
+* Asdf
+#+begin_src sh :tangle init.sh
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
+
+asdf plugin add golang
+asdf install golang 1.22.3
+
+asdf plugin add ruby
+asdf install ruby 3.1.2
+
+go install github.com/sachaos/viddy@latest
+#+end_src
+* Docker
+Copied from Omakub project.
+#+begin_src sh
+# Add the official Docker repo
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo wget -qO /etc/apt/keyrings/docker.asc https://download.docker.com/linux/ubuntu/gpg
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+
+# Install Docker engine and standard plugins
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+# Give this user privileged Docker access
+sudo usermod -aG docker ${USER}
+
+# Use local logging driver - it's more efficient and uses compression by default.
+echo '{"log-driver":"local","log-opts":{"max-size":"10m","max-file":"5"}}' | sudo tee /etc/docker/daemon.json > /dev/null
+#+end_src

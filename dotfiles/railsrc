@@ -1,0 +1,8 @@
+--template=https://railsbytes.com/script/z5OsoB
+--database=postgresql
+--skip-action-mailbox
+--skip-action-text
+--skip-action-cable
+--skip-active-storage
+--skip-hotwire
+--skip-jbuilder
