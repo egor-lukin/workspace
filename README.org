@@ -24,7 +24,6 @@ ln -s ~/workspace/dotfiles/bashrc ~/.bashrc
 ln -s ~/workspace/dotfiles/gitconfig ~/.gitconfig
 ln -s ~/workspace/dotfiles/pryrc ~/.pryrc
 ln -s ~/workspace/dotfiles/tmux.conf ~/.tmux.conf
-ln -s ~/workspace/dotfiles/vimrc ~/.vimrc
 ln -s ~/workspace/dotfiles/k9s ~/.k9s
 ln -s ~/workspace/dotfiles/tool-versions ~/.tool-versions
 #+end_src
@@ -32,13 +31,39 @@ ln -s ~/workspace/dotfiles/tool-versions ~/.tool-versions
 #+begin_src sh :tangle init.sh
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
 
+. "$HOME/.asdf/asdf.sh"
+
 asdf plugin add golang
 asdf install golang 1.22.3
+
+gem install dip
 
 asdf plugin add ruby
 asdf install ruby 3.1.2
 
 go install github.com/sachaos/viddy@latest
+go install github.com/derailed/k9s@latest
+#+end_src
+* Terraform
+#+begin_src sh :tangle init.sh
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+
+gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
+sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+sudo apt update
+
+sudo apt-get install terraform
+
+
 #+end_src
 * Docker
 Copied from Omakub project.
@@ -58,4 +83,14 @@ sudo usermod -aG docker ${USER}
 
 # Use local logging driver - it's more efficient and uses compression by default.
 echo '{"log-driver":"local","log-opts":{"max-size":"10m","max-file":"5"}}' | sudo tee /etc/docker/daemon.json > /dev/null
+#+end_src
+* Packages
+** Stripe
+#+begin_src sh
+curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
+
+sudo apt update
+sudo apt install stripe
 #+end_src

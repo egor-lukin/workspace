@@ -16,25 +16,30 @@
 (setq epa-file-encrypt-to "mail@egorlukin.me")
 (setq epg-pinentry-mode 'loopback)
 
+(with-eval-after-load 'company
+  (define-key company-mode-map (kbd "<tab>") 'company-complete))
+
 (setq yas-snippet-dirs '("~/org/snippets"
                          "~/emacs.d/mysnippets"))
 
 (setq doom-theme 'doom-monokai-pro)
 
-(setq doom-font (font-spec :family "monospace" :size 25 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 25))
+(setq doom-font (font-spec :family "monospace" :size 42 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 42))
 
 (setq display-line-numbers-type t)
 
+(setq gtd/files '("gtd.org" "backlog.org" "archieved.org"))
+
 (defun gtd/all-files ()
   (mapcar
-   (lambda (f) (concat gtd/dir f))
+   (lambda (f) (concat gtd-dir f))
    (append
     (mapcar
      (lambda (f) (concat "archived/" f))
      (seq-filter
       (lambda (f) (not(member f '("." ".."))))
-      (directory-files (concat gtd/dir "archived"))))
+      (directory-files (concat gtd-dir "archived"))))
     gtd/files)))
 
 (after! org
@@ -44,14 +49,12 @@
   (setq org-download-dir (concat org-dir "screenshots/"))
   (setq org-archive-location (concat gtd-dir "archieved.org::"))
 
-  (setq org-refile-targets
-      '(((concat gtd-dir "gtd.org") :maxlevel . 2)
-        ((concat gtd-dir "birthday.org") :maxlevel . 2)
-        ((concat gtd-dir "backlog.org") :maxlevel . 2)))
+  (setq org-agenda-files '("~/org/roam/gtd/gtd.org" "~/org/roam/gtd/birthday.org" "~/org/roam/gtd/backlog.org"))
+
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
   (setq org-todo-keywords
-        '((sequence "TODO" "IN-PROGRESS" "WAIT" "|" "DONE" "CLOSED")))
-  (setq org-agenda-files '((concat "gtd.org") (concat "birthday.org"))))
+        '((sequence "TODO" "IN-PROGRESS" "WAIT" "|" "DONE" "CLOSED"))))
 
 (require 'org-habit)
 
@@ -250,10 +253,27 @@ regardless of whether the current buffer is in `eww-mode'."
     (apply orig-fun args)))
 (advice-add 'eww :around #'modi/force-new-eww-buffer)
 
+(defun eww-search-current-line ()
+  "Search the web using the current line's trimmed content with eww and set it as the selected region."
+(interactive)
+  (let* ((start (line-beginning-position))
+         (end (line-end-position))
+         (current-line (buffer-substring-no-properties start end))
+         (trimmed-line (string-trim current-line)))
+    ;; Replace current line with the trimmed one
+    (delete-region start end)
+    (insert trimmed-line)
+    ;; Set the region to the trimmed line
+    (set-mark (point))
+    (goto-char start)
+    ;; Call eww-search-word with the trimmed line
+    (eww-search-words)))
+
 (after! eww
   (map! :leader
         :prefix "e"
         :desc "eww-list-buffers" "l" #'eww-list-buffers
+        :desc "eww-search-current-line" "f" #'eww-search-current-line
         :desc "eww-copy-page-url" "y" #'eww-copy-page-url))
 
 (after! elfeed
