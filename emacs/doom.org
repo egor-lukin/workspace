@@ -236,7 +236,7 @@ This determines the style of line numbers in effect. If set to `nil', line numbe
 #+end_src
 
 ** Org-Mode
-Setup org directory.
+Setup org directory     .
 #+begin_src elisp :tangle config.el
 (after! org
   (setq org-directory org-dir)
@@ -245,7 +245,7 @@ Setup org directory.
   (setq org-download-dir (concat org-dir "screenshots/"))
   (setq org-archive-location (concat gtd-dir "archieved.org::"))
 
-  (setq org-agenda-files '("~/org/roam/gtd/gtd.org" "~/org/roam/gtd/birthday.org" "~/org/roam/gtd/backlog.org"))
+  (setq org-agenda-files '("~/org/roam/gtd"))
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
@@ -260,7 +260,7 @@ Setup org directory.
 (setq org-habit-preceding-days 25)
 (setq org-habit-following-days 3)
 #+end_src
-** Org AI
+** LLM
 #+begin_src elisp :tangle config.el
 (use-package org-ai
   :ensure t
@@ -281,6 +281,10 @@ Setup org directory.
 (setq org-ai-image-default-style 'vivid)
 (setq org-ai-image-default-quality 'hd)
 (setq org-ai-image-directory (expand-file-name "ai-images/" org-directory))
+
+(use-package! gptel
+ :config
+ (setq! gptel-api-key open-ai-api-token))
 #+end_src
 ** Org-Roam
 #+begin_src elisp :tangle config.el
@@ -304,23 +308,9 @@ Setup org directory.
                               "#+title: %<%A, %d %B %Y>\n"))))
 
   (setq org-roam-capture-templates
-        '(("t" "Task note" plain
+        '(("l" "Literate note" plain
            "%?"
-           :if-new (file+head "tasks/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :tasks\n")
-           :unnarrowed t)
-          ("l" "Literate note" plain
-           "%?"
-           :if-new (file+head "literate/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :literate\n")
-           :unnarrowed t)
-          ("c" "Conceptual note" plain "%?"
-           :if-new (file+head "conceptual/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :conceptual\n")
-           :unnarrowed t)
-          ("r" "Planning note" plain "%?"
-           :if-new (file+head "planning/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :planning\n")
-           :unnarrowed t)
-          ("p" "Project note" plain
-           "%?"
-           :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :projects\n")
+           :if-new (file+head "literate/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :literate\n")
            :unnarrowed t)))
 
   (map! :leader
@@ -337,7 +327,10 @@ Setup org directory.
         :desc "org-roam-buffer-toggle" "b" #'org-roam-buffer-toggle
         :desc "org-roam-capture" "c" #'org-roam-capture))
 #+end_src
-** Org-Capture
+** Org-Capture :ATTACH:
+:PROPERTIES:
+:ID:       29ff5b58-f62c-4104-aefa-69503b00d6c6
+:END:
 #+begin_src elisp :tangle config.el
 (defun my/daily-note-filename ()
   (let ((date (format-time-string "%Y-%m-%d" (current-time))))
@@ -358,6 +351,21 @@ Setup org directory.
           ("b" "Add entry to daily buffer" entry
            (file+headline (lambda () (my/daily-note-filename)) "buffer")
            (file "templates/buffer.org")))))
+#+end_src
+
+Extend copy function for working with images.
+#+begin_src elisp
+;; (defun custom-evil-paste-after (orig-fun &rest args)
+;;   "Advice to extend `evil-paste-after' to check clipboard content type.
+;; Uses `org-download-clipboard' for images and regular paste for text."
+
+;;   (let* ((is-image (and (fboundp 'org-download-clipboard)
+;;                         (string-match-p "^image/" (shell-command-to-string "xclip -selection clipboard -o -t TARGETS | grep image/")))))
+;;     (if is-image
+;;         (org-download-clipboard)
+;;       (apply orig-fun args))))
+
+;; (advice-add 'evil-paste-after :around #'custom-evil-paste-after)
 #+end_src
 ** Org-Clock
 #+begin_src elisp :tangle config.el
@@ -409,6 +417,16 @@ https://github.com/s-kostyaev/ellama
 					 :chat-model "llama3:latest"
 					 :embedding-model "llama3:latest")))
 #+end_src
+** Aider
+https://github.com/tninja/aider.el
+#+begin_src elisp :tangle config.el
+(use-package aider
+  :config
+  (setq aider-args '("--model" "gpt-4o-mini"))
+  (setenv "OPENAI_API_KEY" open-ai-api-token)
+  ;; Optional: Set a key binding for the transient menu
+  (global-set-key (kbd "C-c a") 'aider-transient-menu))
+#+end_src
 ** Projectile
 #+begin_src elisp :tangle config.el
 (setq projectile-project-search-path '("~/dev"))
@@ -421,6 +439,11 @@ fuzzy search by default
 (setq ivy-re-builders-alist
       '((counsel-ag . regexp-quote)
         (t      . ivy--regex-fuzzy)))
+
+(map! :leader
+      :prefix "s"
+      :desc "projectile-grep" "g" #'projectile-grep)
+
 #+end_src
 ** Ein
 #+begin_src elisp :tangle config.el
@@ -534,7 +557,7 @@ regardless of whether the current buffer is in `eww-mode'."
              ;;          "png" "gif" "bmp" "tif" "jpeg" "jpg"))
              ;;       "eog"
              ;;       '(file))
-             '("\\.pdf" "evince" (file))
+             ;; '("\\.pdf" "evince" (file))
              '("\\.djvu" "evince" (file))
              ))
 #+end_src
@@ -748,4 +771,11 @@ Insert photos for selected day
 
 (package! ellama)
 (package! gptel)
+(package! aider
+  :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
+
+(package! org-fc
+  :recipe (:host github
+           :repo "l3kn/org-fc"
+           :files ("*.el" "README.md" "awk" "docs")))
 #+end_src

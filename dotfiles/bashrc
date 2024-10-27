@@ -86,6 +86,8 @@ PROMPT_COMMAND=set_prompt
 export VISUAL="vim"
 export PATH=$HOME/bin:$PATH
 export PATH="/home/azx/Projects:${PATH}"
+export PATH=$HOME/.local/bin:$PATH
+
 
 export PATH=$HOME.local/bin:$PATH
 
@@ -134,3 +136,5 @@ alias yt-dl='docker run \
                   -e PUID=$(id -u) \
                   -v "$(pwd)":/workdir:rw \
                   ghcr.io/mikenye/docker-youtube-dl:latest'
+
+alias ad='docker run -it --user $(id -u):$(id -g) --volume $(pwd):/app paulgauthier/aider-full --openai-api-key $OPENAI_API_KEY --no-auto-commits'

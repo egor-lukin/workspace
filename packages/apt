@@ -40,3 +40,4 @@ python3-pip
 mosh
 encfs
 curl
+postgresql-client-common

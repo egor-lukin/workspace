@@ -47,3 +47,10 @@
 
 (package! ellama)
 (package! gptel)
+(package! aider
+  :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
+
+(package! org-fc
+  :recipe (:host github
+           :repo "l3kn/org-fc"
+           :files ("*.el" "README.md" "awk" "docs")))

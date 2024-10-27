@@ -41,6 +41,16 @@ gem install dip
 asdf plugin add ruby
 asdf install ruby 3.1.2
 
+asdf plugin-add yarn
+asdf install yarn latest
+
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+asdf install nodejs latest
+asdf install nodejs 16.18.0
+
+asdf plugin-add python
+asdf install python 3.11.5
+
 go install github.com/sachaos/viddy@latest
 go install github.com/derailed/k9s@latest
 #+end_src

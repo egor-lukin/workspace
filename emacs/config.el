@@ -49,7 +49,7 @@
   (setq org-download-dir (concat org-dir "screenshots/"))
   (setq org-archive-location (concat gtd-dir "archieved.org::"))
 
-  (setq org-agenda-files '("~/org/roam/gtd/gtd.org" "~/org/roam/gtd/birthday.org" "~/org/roam/gtd/backlog.org"))
+  (setq org-agenda-files '("~/org/roam/gtd"))
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 2)))
 
@@ -82,6 +82,10 @@
 (setq org-ai-image-default-quality 'hd)
 (setq org-ai-image-directory (expand-file-name "ai-images/" org-directory))
 
+(use-package! gptel
+ :config
+ (setq! gptel-api-key open-ai-api-token))
+
 (defun my/org-roam-node-find-by-directory ()
   (interactive)
   (let* ((directories '("tasks" "literate" "conceptual" "projects" "planning"))
@@ -102,23 +106,9 @@
                               "#+title: %<%A, %d %B %Y>\n"))))
 
   (setq org-roam-capture-templates
-        '(("t" "Task note" plain
+        '(("l" "Literate note" plain
            "%?"
-           :if-new (file+head "tasks/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :tasks\n")
-           :unnarrowed t)
-          ("l" "Literate note" plain
-           "%?"
-           :if-new (file+head "literate/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :literate\n")
-           :unnarrowed t)
-          ("c" "Conceptual note" plain "%?"
-           :if-new (file+head "conceptual/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :conceptual\n")
-           :unnarrowed t)
-          ("r" "Planning note" plain "%?"
-           :if-new (file+head "planning/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :planning\n")
-           :unnarrowed t)
-          ("p" "Project note" plain
-           "%?"
-           :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org.gpg" "#+title: ${title}\n#+filetags: :projects\n")
+           :if-new (file+head "literate/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :literate\n")
            :unnarrowed t)))
 
   (map! :leader
@@ -200,6 +190,13 @@
 					 :chat-model "llama3:latest"
 					 :embedding-model "llama3:latest")))
 
+(use-package aider
+  :config
+  (setq aider-args '("--model" "gpt-4o-mini"))
+  (setenv "OPENAI_API_KEY" open-ai-api-token)
+  ;; Optional: Set a key binding for the transient menu
+  (global-set-key (kbd "C-c a") 'aider-transient-menu))
+
 (setq projectile-project-search-path '("~/dev"))
 
 (setq helm-mode-fuzzy-match t)
@@ -207,6 +204,10 @@
 (setq ivy-re-builders-alist
       '((counsel-ag . regexp-quote)
         (t      . ivy--regex-fuzzy)))
+
+(map! :leader
+      :prefix "s"
+      :desc "projectile-grep" "g" #'projectile-grep)
 
 (setq ein:output-area-inlined-images t)
 
@@ -299,7 +300,7 @@ regardless of whether the current buffer is in `eww-mode'."
              ;;          "png" "gif" "bmp" "tif" "jpeg" "jpg"))
              ;;       "eog"
              ;;       '(file))
-             '("\\.pdf" "evince" (file))
+             ;; '("\\.pdf" "evince" (file))
              '("\\.djvu" "evince" (file))
              ))
 
