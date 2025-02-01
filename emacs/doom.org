@@ -311,7 +311,12 @@ Setup org directory     .
         '(("l" "Literate note" plain
            "%?"
            :if-new (file+head "literate/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :literate\n")
-           :unnarrowed t)))
+           :unnarrowed t)
+          ("p" "Project note" plain
+           "%?"
+           :if-new (file+head "projects/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :project\n")
+           :unnarrowed t)
+          ))
 
   (map! :leader
         :prefix "r"
@@ -420,12 +425,12 @@ https://github.com/s-kostyaev/ellama
 ** Aider
 https://github.com/tninja/aider.el
 #+begin_src elisp :tangle config.el
-(use-package aider
-  :config
-  (setq aider-args '("--model" "gpt-4o-mini"))
-  (setenv "OPENAI_API_KEY" open-ai-api-token)
-  ;; Optional: Set a key binding for the transient menu
-  (global-set-key (kbd "C-c a") 'aider-transient-menu))
+;; (use-package aider
+;;   :config
+;;   (setq aider-args '("--model" "gpt-4o-mini"))
+;;   (setenv "OPENAI_API_KEY" open-ai-api-token)
+;;   ;; Optional: Set a key binding for the transient menu
+;;   (global-set-key (kbd "C-c a") 'aider-transient-menu))
 #+end_src
 ** Projectile
 #+begin_src elisp :tangle config.el
@@ -618,11 +623,13 @@ Show current active clock in polybar.
 #+end_src
 ** Clipboard
 #+begin_src elisp :tangle packages.el
-(package! xclip)
+(when (not (getenv "TERMUX_VERSION"))
+  (package! xclip))
 #+end_src
 
 #+begin_src elisp :tangle config.el
-(xclip-mode 1)
+(when (not (getenv "TERMUX_VERSION"))
+  (xclip-mode 1))
 #+end_src
 ** Misc
 Usefull command for deleting file
@@ -676,6 +683,24 @@ Insert photos for selected day
 (defun org-insert-photos ()
   (interactive)
   (insert (org--photos-list)))
+#+end_src
+
+#+begin_src elisp
+(defun encrypt-files-in-directory (directory recipient)
+  "Encrypt all files in DIRECTORY for RECIPIENT using GPG, excluding those with a .gpg extension."
+  (interactive "DSelect directory: \nsRecipient: ")
+  (let ((files (directory-files directory t "^[^.].*$" t))) ;; ignore hidden files
+    (dolist (file files)
+      (unless (or (file-directory-p file)
+                  (string-suffix-p ".gpg" file)) ;; skip files with .gpg extension
+        (let ((output-file (concat file ".gpg")))
+          (call-process "gpg" nil nil nil
+                        "--encrypt"
+                        "--recipient" recipient
+                        "--output" output-file
+                        "--yes"    ;; overwrite output files if they exist
+                        file)
+          (message "Encrypted %s to %s" file output-file))))))
 #+end_src
 ** Helpers
 #+begin_src elisp :tangle config.el
@@ -759,14 +784,15 @@ Insert photos for selected day
 (package! ob-async)
 
 (package! org-ai
+  :pin "5adfde1bc7db9026747fbfae4c154eeac4ef8e59"
   :recipe (:host github
            :repo "rksm/org-ai"
            :files ("*.el" "README.md" "snippets")))
 
 (package! ellama)
 (package! gptel)
-(package! aider
-  :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
+;; (package! aider
+;;   :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
 
 (package! org-fc
   :recipe (:host github

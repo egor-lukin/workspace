@@ -109,7 +109,12 @@
         '(("l" "Literate note" plain
            "%?"
            :if-new (file+head "literate/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :literate\n")
-           :unnarrowed t)))
+           :unnarrowed t)
+          ("p" "Project note" plain
+           "%?"
+           :if-new (file+head "projects/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :project\n")
+           :unnarrowed t)
+          ))
 
   (map! :leader
         :prefix "r"
@@ -190,12 +195,12 @@
 					 :chat-model "llama3:latest"
 					 :embedding-model "llama3:latest")))
 
-(use-package aider
-  :config
-  (setq aider-args '("--model" "gpt-4o-mini"))
-  (setenv "OPENAI_API_KEY" open-ai-api-token)
-  ;; Optional: Set a key binding for the transient menu
-  (global-set-key (kbd "C-c a") 'aider-transient-menu))
+;; (use-package aider
+;;   :config
+;;   (setq aider-args '("--model" "gpt-4o-mini"))
+;;   (setenv "OPENAI_API_KEY" open-ai-api-token)
+;;   ;; Optional: Set a key binding for the transient menu
+;;   (global-set-key (kbd "C-c a") 'aider-transient-menu))
 
 (setq projectile-project-search-path '("~/dev"))
 
@@ -348,7 +353,8 @@ regardless of whether the current buffer is in `eww-mode'."
       :desc "bookmark-delete" "d" #'bookmark-delete
       :desc "bookmark-set" "s" #'bookmark-set)
 
-(xclip-mode 1)
+(when (not (getenv "TERMUX_VERSION"))
+  (xclip-mode 1))
 
 (defun delete-file-and-buffer ()
   "Kill the current buffer and deletes the file it is visiting."

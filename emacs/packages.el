@@ -1,4 +1,5 @@
-(package! xclip)
+(when (not (getenv "TERMUX_VERSION"))
+  (package! xclip))
 
 (package! anki-editor)
 (package! tramp-term)
@@ -41,14 +42,15 @@
 (package! ob-async)
 
 (package! org-ai
+  :pin "5adfde1bc7db9026747fbfae4c154eeac4ef8e59"
   :recipe (:host github
            :repo "rksm/org-ai"
            :files ("*.el" "README.md" "snippets")))
 
 (package! ellama)
 (package! gptel)
-(package! aider
-  :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
+;; (package! aider
+;;   :recipe (:host github :repo "tninja/aider.el" :files ("aider.el")))
 
 (package! org-fc
   :recipe (:host github
