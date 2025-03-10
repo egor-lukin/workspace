@@ -26,6 +26,7 @@ ln -s ~/workspace/dotfiles/pryrc ~/.pryrc
 ln -s ~/workspace/dotfiles/tmux.conf ~/.tmux.conf
 ln -s ~/workspace/dotfiles/k9s ~/.k9s
 ln -s ~/workspace/dotfiles/tool-versions ~/.tool-versions
+ln -s ~/workspace/dotfiles/aider.conf.yml ~/.aider.conf.yml
 #+end_src
 * Asdf
 #+begin_src sh :tangle init.sh
