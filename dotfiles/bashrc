@@ -55,8 +55,6 @@ alias pbcopy='xsel --clipboard --input'
 alias enw='emacs -nw'
 alias se='eval `ssh-agent`'
 
-alias aider='aider --no-auto-commits'
-
 ## History configuration
 # Appending history instead of rewriting
 shopt -s histappend
