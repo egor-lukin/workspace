@@ -1,4 +1,4 @@
 dark-mode: true
 auto-commits: false
 watch-files: true
-editor: 'vim'
+editor: 'emacsclient -r'
