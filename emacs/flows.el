@@ -14,7 +14,7 @@
 (defun my/map-check-ins (handler)
   (org-map-entries
    (lambda ()
-     (when (string= (org-get-heading t t t t) "check-in")
+     (when (or (string= (org-get-heading t t t t) "check-in") (string= (org-get-heading t t t t) "workout"))
        (let* ((created-at (org-entry-get (point) "CREATED"))
               (daily-note-file (my/daily-note-filename created-at)))
          (funcall handler daily-note-file))))
@@ -32,7 +32,7 @@
   (with-current-buffer (find-file-noselect daily-note-file)
     (goto-char (point-min))
     (re-search-forward "^\\* buffer" nil t)
-    (insert (concat "\n" subtree "\n"))
+    (insert (concat "\n*" subtree "\n"))
     (save-buffer)))
 
 ;; (defun test-my/map-check-ins ()
