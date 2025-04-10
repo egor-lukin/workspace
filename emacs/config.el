@@ -62,6 +62,11 @@
 (setq org-habit-preceding-days 25)
 (setq org-habit-following-days 3)
 
+(use-package org-drill
+  :ensure t
+  :config
+  (setq org-drill-spaced-repetition-algorithm 'sm2))
+
 (use-package org-ai
   :ensure t
   :commands (org-ai-mode

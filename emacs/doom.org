@@ -260,6 +260,13 @@ Setup org directory     .
 (setq org-habit-preceding-days 25)
 (setq org-habit-following-days 3)
 #+end_src
+** Spaced Repetitions
+#+begin_src elisp :tangle config.el
+(use-package org-drill
+  :ensure t
+  :config
+  (setq org-drill-spaced-repetition-algorithm 'sm2))
+#+end_src
 ** LLM
 #+begin_src elisp :tangle config.el
 (use-package org-ai
@@ -798,4 +805,6 @@ Insert photos for selected day
   :recipe (:host github
            :repo "l3kn/org-fc"
            :files ("*.el" "README.md" "awk" "docs")))
+
+(package! org-drill)
 #+end_src

@@ -56,3 +56,5 @@
   :recipe (:host github
            :repo "l3kn/org-fc"
            :files ("*.el" "README.md" "awk" "docs")))
+
+(package! org-drill)
